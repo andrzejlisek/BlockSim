@@ -1,0 +1,411 @@
+﻿<!doctype html>
+<html>
+ <head>
+  <title>BlockSim</title><meta charset="utf-8">
+  <style>
+   *
+   {
+    box-sizing: border-box;
+   }
+   table
+   {
+    table-layout: fixed;
+   }
+   td
+   {
+    overflow-x: clip;
+    overflow-y: clip;
+   }
+   .ctrl
+   {
+    margin:0;
+    padding:0;
+    width:100%;
+    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;"
+   }
+  </style>
+ </head>
+ <body style="margin: 0;">
+  <script src="three.js"></script>
+
+  <div style="width:100%">
+   <div id="Col1" style="float:left;width:50%">
+    <input type="button" id="ModuleSplitL" class="ctrl" onmousedown="GuiSetSplit(0)" onmouseup="" value="&#11104;|" style="height:50px" />
+    <input type="button" id="ModuleSwapXL" class="ctrl" style="height:50px" value="&#11106;" onclick="GuiSwap(0, 0, 0)">
+    <div id="D0L"></div>
+    &nbsp;<input type="button" id="ModuleSwap0L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(0, 1, 0)">&nbsp;
+    <div id="D1L"></div>
+    &nbsp;<input type="button" id="ModuleSwap1L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(1, 2, 0)">&nbsp;
+    <div id="D2L"></div>
+    &nbsp;<input type="button" id="ModuleSwap2L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(2, 3, 0)">&nbsp;
+    <div id="D3L"></div>
+    &nbsp;<input type="button" id="ModuleSwap3L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(3, 4, 0)">&nbsp;
+    <div id="D4L"></div>
+    &nbsp;<input type="button" id="ModuleSwap4L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(4, 5, 0)">&nbsp;
+    <div id="D5L"></div>
+    &nbsp;<input type="button" id="ModuleSwap5L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(5, 6, 0)">&nbsp;
+    <div id="D6L"></div>
+    &nbsp;<input type="button" id="ModuleSwap6L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(6, 7, 0)">&nbsp;
+    <div id="D7L"></div>
+    &nbsp;<input type="button" id="ModuleSwap7L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(7, 8, 0)">&nbsp;
+    <div id="D8L"></div>
+    &nbsp;<input type="button" id="ModuleSwap8L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(8, 9, 0)">&nbsp;
+    <div id="D9L"></div>
+    &nbsp;<input type="button" id="ModuleSwap9L" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(9,10, 0)">&nbsp;
+    &nbsp;
+   </div>
+   <div id="Col2" style="float:left;width:50%">
+    <input type="button" id="ModuleSplitR" class="ctrl" onmousedown="GuiSetSplit(1)" onmouseup="" value="|&#11106;" style="height:50px" />
+    <input type="button" id="ModuleSwapXR" class="ctrl" style="height:50px" value="&#11104;" onclick="GuiSwap(0, 0, 1)">
+    <div id="D0R"></div>
+    &nbsp;<input type="button" id="ModuleSwap0R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(0, 1, 1)">
+    <div id="D1R"></div>
+    &nbsp;<input type="button" id="ModuleSwap1R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(1, 2, 1)">&nbsp;
+    <div id="D2R"></div>
+    &nbsp;<input type="button" id="ModuleSwap2R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(2, 3, 1)">&nbsp;
+    <div id="D3R"></div>
+    &nbsp;<input type="button" id="ModuleSwap3R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(3, 4, 1)">&nbsp;
+    <div id="D4R"></div>
+    &nbsp;<input type="button" id="ModuleSwap4R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(4, 5, 1)">&nbsp;
+    <div id="D5R"></div>
+    &nbsp;<input type="button" id="ModuleSwap5R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(5, 6, 1)">&nbsp;
+    <div id="D6R"></div>
+    &nbsp;<input type="button" id="ModuleSwap6R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(6, 7, 1)">&nbsp;
+    <div id="D7R"></div>
+    &nbsp;<input type="button" id="ModuleSwap7R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(7, 8, 1)">&nbsp;
+    <div id="D8R"></div>
+    &nbsp;<input type="button" id="ModuleSwap8R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(8, 9, 1)">&nbsp;
+    <div id="D9R"></div>
+    &nbsp;<input type="button" id="ModuleSwap9R" class="ctrl" style="height:50px" value="&#11109;" onclick="GuiSwap(9,10, 1)">&nbsp;
+    &nbsp;
+   </div>
+  </div>
+
+  <div style="display:none">
+
+   <table id="T0" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td align="center" valign="center">
+      <canvas id="ViewCanvas" width="100" height="100" onclick="KeyCapture(true);"></canvas>
+     </td>
+    </tr>
+   </table>
+
+   <table id="T1" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td id="CtrlBtn01_" rowspan="5" align="center" valign="center"><input type="button" id="CtrlBtn01" class="ctrl" onmousedown="GuiControlsChange()" onmouseup="" value="#" /></td>
+     <td id="CtrlCaption1_" colspan="3" align="center" valign="center"><input id="CtrlBtn1_" type="button" onclick="CameraPosAngBtn(1)" value="Move" class="ctrl"></td>
+     <td id="CtrlBtn03_" rowspan="5" align="center" valign="center"><input type="button" id="CtrlBtn03" class="ctrl" onmousedown="GuiControlsChange()" onmouseup="" value="#" /></td>
+     <td id="CtrlCaption2_" colspan="3" align="center" valign="center"><input id="CtrlBtn2_" type="button" onclick="CameraPosAngBtn(2)" value="Rotate" class="ctrl"></td>
+     <td id="CtrlBtn04_" rowspan="5" align="center" valign="center"><input type="button" id="CtrlBtn04" class="ctrl" onmousedown="GuiControlsChange()" onmouseup="" value="#" /></td>
+     <td id="CtrlCaption3_" colspan="3" align="center" valign="center"><input id="CtrlBtn3_" type="button" onclick="CameraPosAngBtn(3)" value="Position" class="ctrl"></td>
+     <td id="CtrlBtn05_" rowspan="5" align="center" valign="center"><input type="button" id="CtrlBtn05" class="ctrl" onmousedown="GuiControlsChange()" onmouseup="" value="#" /></td>
+     <td id="CtrlCaption4_" colspan="3" align="center" valign="center"><input id="CtrlBtn4_" type="button" onclick="CameraPosAngBtn(4)" value="Size" class="ctrl"></td>
+     <td id="CtrlBtn02_" rowspan="5" align="center" valign="center"><input type="button" id="CtrlBtn02" class="ctrl" onmousedown="GuiControlsChange()" onmouseup="" value="#" /></td>
+    </tr>
+    <tr>
+     <td id="CtrlBtn15_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn15" class="ctrl" onmousedown="ScrKeyDown(15)" onmouseup="ScrKeyUp(15)" value="&#11105;" /></td>
+     <td id="CtrlBtn11_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn11" class="ctrl" onmousedown="ScrKeyDown(11)" onmouseup="ScrKeyUp(11)" value="&#11111;&#11110;" /></td>
+     <td id="CtrlBtn16_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn16" class="ctrl" onmousedown="ScrKeyDown(16)" onmouseup="ScrKeyUp(16)" value="&#11107;" /></td>
+     <td id="CtrlBtn25_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn25" class="ctrl" onmousedown="ScrKeyDown(25)" onmouseup="ScrKeyUp(25)" value="&#11119;" /></td>
+     <td id="CtrlBtn21_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn21" class="ctrl" onmousedown="ScrKeyDown(21)" onmouseup="ScrKeyUp(21)" value="&#11105;" /></td>
+     <td id="CtrlBtn26_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn26" class="ctrl" onmousedown="ScrKeyDown(26)" onmouseup="ScrKeyUp(26)" value="&#11118;" /></td>
+     <td id="CtrlBtn35_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn35" class="ctrl" onmousedown="ScrKeyDown(35)" onmouseup="ScrKeyUp(35)" value="&#11105;" /></td>
+     <td id="CtrlBtn31_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn31" class="ctrl" onmousedown="ScrKeyDown(31)" onmouseup="ScrKeyUp(31)" value="&#11111;&#11110;" /></td>
+     <td id="CtrlBtn36_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn36" class="ctrl" onmousedown="ScrKeyDown(36)" onmouseup="ScrKeyUp(36)" value="&#11107;" /></td>
+     <td id="CtrlBtn45_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn45" class="ctrl" onmousedown="ScrKeyDown(45)" onmouseup="ScrKeyUp(45)" value="&#11105;" /></td>
+     <td id="CtrlBtn41_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn41" class="ctrl" onmousedown="ScrKeyDown(41)" onmouseup="ScrKeyUp(41)" value="&#11111;&#11110;" /></td>
+     <td id="CtrlBtn46_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn46" class="ctrl" onmousedown="ScrKeyDown(46)" onmouseup="ScrKeyUp(46)" value="&#11107;" /></td>
+    </tr>
+    <tr>
+     <td id="CtrlBtn13_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn13" class="ctrl" onmousedown="ScrKeyDown(13)" onmouseup="ScrKeyUp(13)" value="&#11104;" /></td>
+     <td id="CtrlBtn12_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn12" class="ctrl" onmousedown="ScrKeyDown(12)" onmouseup="ScrKeyUp(12)" value="&#11113;&#11112;" /></td>
+     <td id="CtrlBtn14_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn14" class="ctrl" onmousedown="ScrKeyDown(14)" onmouseup="ScrKeyUp(14)" value="&#11106;" /></td>
+     <td id="CtrlBtn23_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn23" class="ctrl" onmousedown="ScrKeyDown(23)" onmouseup="ScrKeyUp(23)" value="&#11104;" /></td>
+     <td id="CtrlBtn22_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn22" class="ctrl" onmousedown="ScrKeyDown(22)" onmouseup="ScrKeyUp(22)" value="&#11107;" /></td>
+     <td id="CtrlBtn24_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn24" class="ctrl" onmousedown="ScrKeyDown(24)" onmouseup="ScrKeyUp(24)" value="&#11106;" /></td>
+     <td id="CtrlBtn33_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn33" class="ctrl" onmousedown="ScrKeyDown(33)" onmouseup="ScrKeyUp(33)" value="&#11104;" /></td>
+     <td id="CtrlBtn32_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn32" class="ctrl" onmousedown="ScrKeyDown(32)" onmouseup="ScrKeyUp(32)" value="&#11113;&#11112;" /></td>
+     <td id="CtrlBtn34_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn34" class="ctrl" onmousedown="ScrKeyDown(34)" onmouseup="ScrKeyUp(34)" value="&#11106;" /></td>
+     <td id="CtrlBtn43_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn43" class="ctrl" onmousedown="ScrKeyDown(43)" onmouseup="ScrKeyUp(43)" value="&#11104;" /></td>
+     <td id="CtrlBtn42_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn42" class="ctrl" onmousedown="ScrKeyDown(42)" onmouseup="ScrKeyUp(42)" value="&#11113;&#11112;" /></td>
+     <td id="CtrlBtn44_" align="center" valign="center" width="10%"><input type="button" id="CtrlBtn44" class="ctrl" onmousedown="ScrKeyDown(44)" onmouseup="ScrKeyUp(44)" value="&#11106;" /></td>
+    </tr>
+    <tr>
+     <td id="CtrlKeys11_" colspan="3" align="center" valign="center"><input type="button" id="CtrlKeys11" class="ctrl" onclick="ScrKeyRepeat(1, false);" value="One step" /></td>
+     <td id="CtrlKeys21_" colspan="3" align="center" valign="center"><input type="button" id="CtrlKeys21" class="ctrl" onclick="ScrKeyRepeat(2, false);" value="One step" /></td>
+     <td id="CtrlKeys31_" colspan="3" align="center" valign="center"><input type="button" id="CtrlKeys31" class="ctrl" onclick="ScrKeyRepeat(3, false);" value="One step" /></td>
+     <td id="CtrlKeys41_" colspan="3" align="center" valign="center"><input type="button" id="CtrlKeys41" class="ctrl" onclick="ScrKeyRepeat(4, false);" value="One step" /></td>
+    </tr>
+    <tr>
+     <td id="CtrlKeys12_" colspan="3" align="center" valign="center"><input type="button" id="CtrlKeys12" class="ctrl" onclick="ScrKeyRepeat(1, true);" value="Continuous" /></td>
+     <td id="CtrlKeys22_" colspan="3" align="center" valign="center"><input type="button" id="CtrlKeys22" class="ctrl" onclick="ScrKeyRepeat(2, true);" value="Continuous" /></td>
+     <td id="CtrlKeys32_" colspan="3" align="center" valign="center"><input type="button" id="CtrlKeys32" class="ctrl" onclick="ScrKeyRepeat(3, true);" value="Continuous" /></td>
+     <td id="CtrlKeys42_" colspan="3" align="center" valign="center"><input type="button" id="CtrlKeys42" class="ctrl" onclick="ScrKeyRepeat(4, true);" value="Continuous" /></td>
+    </tr>
+   </table>
+
+   <table id="T2" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td width="33%" align="center" valign="center"><input type="button" id="CtrlBtn0" class="ctrl" value="Cursor" onclick="CursorEditState(0)"></td>
+     <td width="34%" align="center" valign="center"><input type="button" id="CtrlBtn1" class="ctrl" value="Add" onclick="CursorEditState(2)"></td>
+     <td width="33%" align="center" valign="center"><input type="button" id="CtrlBtn2" class="ctrl" value="Move" onclick="CursorEditState(4)"></td>
+    </tr>
+    <tr>
+     <td width="33%" align="center" valign="center"><input type="button" id="CtrlBtn3" class="ctrl" value="Color" onclick="CursorEditState(1)"></td>
+     <td width="34%" align="center" valign="center"><input type="button" id="CtrlBtn4" class="ctrl" value="Erase" onclick="CursorEditState(3)"></td>
+     <td width="33%" align="center" valign="center"><input type="button" id="CtrlBtn5" class="ctrl" value="Rotate" onclick="CursorEditState(5)"></td>
+    </tr>
+   </table>
+
+   <table id="T3" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td width="25%" align="center" valign="center"><input type="button" id="CtrlBtn6" class="ctrl" value="Cut" onclick="ClipboardCut()"></td>
+     <td width="25%" align="center" valign="center"><input type="button" id="CtrlBtn7" class="ctrl" value="Copy" onclick="ClipboardCopy()"></td>
+     <td width="25%" align="center" valign="center"><input type="button" id="CtrlBtn8" class="ctrl" value="Paste" onclick="ClipboardPaste()"></td>
+     <td width="25%" align="center" valign="center"><input type="button" id="CtrlBtn9" class="ctrl" value="Delete" onclick="ClipboardDelete()"></td>
+    </tr>
+   </table>
+
+   <table width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td width="25%" align="center" valign="center">Scale:</td>
+     <td width="25%" align="center" valign="center"><input type="textbox" id="ScaleX" class="ctrl"></td>
+     <td width="25%" align="center" valign="center"><input type="textbox" id="ScaleY" class="ctrl"></td>
+     <td width="25%" align="center" valign="center"><input type="textbox" id="ScaleZ" class="ctrl"></td>
+    </tr>
+    <tr>
+     <td align="center" valign="center">Cursor:</td>
+     <td align="center" valign="center"><input type="textbox" id="CursorX" class="ctrl"></td>
+     <td align="center" valign="center"><input type="textbox" id="CursorY" class="ctrl"></td>
+     <td align="center" valign="center"><input type="textbox" id="CursorZ" class="ctrl"></td>
+    </tr>
+    <tr>
+     <td align="center" valign="center">Pos:</td>
+     <td align="center" valign="center"><input type="textbox" id="CameraPosX" class="ctrl"></td>
+     <td align="center" valign="center"><input type="textbox" id="CameraPosY" class="ctrl"></td>
+     <td align="center" valign="center"><input type="textbox" id="CameraPosZ" class="ctrl"></td>
+    </tr>
+    <tr>
+     <td align="center" valign="center">Orient:</td>
+     <td align="center" valign="center"><input type="textbox" id="CameraRotX" class="ctrl"></td>
+     <td align="center" valign="center"><input type="textbox" id="CameraRotY" class="ctrl"></td>
+     <td align="center" valign="center"><input type="textbox" id="CameraRotZ" class="ctrl"></td>
+    </tr>
+    <tr>
+     <td align="center" valign="center">Zoom:</td>
+     <td align="center" valign="center"><input type="textbox" id="CameraAngle" class="ctrl"></td>
+     <td colspan="2" align="center" valign="center"><input type="button" value="Apply" onClick="GuiSet()" class="ctrl"></td>
+    </tr>
+   </table>
+
+   <table id="T4" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td width="25%" align="center" valign="center"></td>
+     <td width="25%" align="center" valign="center"><span id="ColorR">Red</span></td>
+     <td width="25%" align="center" valign="center"><span id="ColorG">Green</span></td>
+     <td width="25%" align="center" valign="center"><span id="ColorB">Blue</span></td>
+    </tr>
+
+    <tr>
+     <td align="center" valign="center"><span id="Color1">Face</span><input type="hidden" id="Color1R" value="0"><input type="hidden" id="Color1G" value="0"><input type="hidden" id="Color1B" value="0"></td>
+     <td align="center" valign="center">
+      <span id="Color1R_Ctrl0"><input type="button" id="Color1R_0" class="ctrl" onclick="ColorCtrl(1100)"><input type="button" id="Color1R_1" class="ctrl" onclick="ColorCtrl(1101)"><input type="button" id="Color1R_2" class="ctrl" onclick="ColorCtrl(1102)"><input type="button" id="Color1R_3" class="ctrl" onclick="ColorCtrl(1103)"><input type="button" id="Color1R_4" class="ctrl" onclick="ColorCtrl(1104)"></span>
+      <span id="Color1R_Ctrl1"><input type="button" id="Color1R_5" class="ctrl" onclick="ColorCtrl(1105)"><input type="button" id="Color1R_6" class="ctrl" onclick="ColorCtrl(1106)"></span>
+     </td>
+     <td align="center" valign="center">
+      <span id="Color1G_Ctrl0"><input type="button" id="Color1G_0" class="ctrl" onclick="ColorCtrl(1200)"><input type="button" id="Color1G_1" class="ctrl" onclick="ColorCtrl(1201)"><input type="button" id="Color1G_2" class="ctrl" onclick="ColorCtrl(1202)"><input type="button" id="Color1G_3" class="ctrl" onclick="ColorCtrl(1203)"><input type="button" id="Color1G_4" class="ctrl" onclick="ColorCtrl(1204)"></span>
+      <span id="Color1G_Ctrl1"><input type="button" id="Color1G_5" class="ctrl" onclick="ColorCtrl(1205)"><input type="button" id="Color1G_6" class="ctrl" onclick="ColorCtrl(1206)"></span>
+     </td>
+     <td align="center" valign="center">
+      <span id="Color1B_Ctrl0"><input type="button" id="Color1B_0" class="ctrl" onclick="ColorCtrl(1300)"><input type="button" id="Color1B_1" class="ctrl" onclick="ColorCtrl(1301)"><input type="button" id="Color1B_2" class="ctrl" onclick="ColorCtrl(1302)"><input type="button" id="Color1B_3" class="ctrl" onclick="ColorCtrl(1303)"><input type="button" id="Color1B_4" class="ctrl" onclick="ColorCtrl(1304)"></span>
+      <span id="Color1B_Ctrl1"><input type="button" id="Color1B_5" class="ctrl" onclick="ColorCtrl(1305)"><input type="button" id="Color1B_6" class="ctrl" onclick="ColorCtrl(1306)"></span>
+     </td>
+    </tr>
+    <tr>
+     <td align="center" valign="center"><span id="Color2">Frame</span><input type="hidden" id="Color2R" value="0"><input type="hidden" id="Color2G" value="0"><input type="hidden" id="Color2B" value="0"></td>
+     <td align="center" valign="center">
+      <span id="Color2R_Ctrl0"><input type="button" id="Color2R_0" class="ctrl" onclick="ColorCtrl(2100)"><input type="button" id="Color2R_1" class="ctrl" onclick="ColorCtrl(2101)"><input type="button" id="Color2R_2" class="ctrl" onclick="ColorCtrl(2102)"><input type="button" id="Color2R_3" class="ctrl" onclick="ColorCtrl(2103)"><input type="button" id="Color2R_4" class="ctrl" onclick="ColorCtrl(2104)"></span>
+      <span id="Color2R_Ctrl1"><input type="button" id="Color2R_5" class="ctrl" onclick="ColorCtrl(2105)"><input type="button" id="Color2R_6" class="ctrl" onclick="ColorCtrl(2106)"></span>
+     </td>
+     <td align="center" valign="center">
+      <span id="Color2G_Ctrl0"><input type="button" id="Color2G_0" class="ctrl" onclick="ColorCtrl(2200)"><input type="button" id="Color2G_1" class="ctrl" onclick="ColorCtrl(2201)"><input type="button" id="Color2G_2" class="ctrl" onclick="ColorCtrl(2202)"><input type="button" id="Color2G_3" class="ctrl" onclick="ColorCtrl(2203)"><input type="button" id="Color2G_4" class="ctrl" onclick="ColorCtrl(2204)"></span>
+      <span id="Color2G_Ctrl1"><input type="button" id="Color2G_5" class="ctrl" onclick="ColorCtrl(2205)"><input type="button" id="Color2G_6" class="ctrl" onclick="ColorCtrl(2206)"></span>
+     </td>
+     <td align="center" valign="center">
+      <span id="Color2B_Ctrl0"><input type="button" id="Color2B_0" class="ctrl" onclick="ColorCtrl(2300)"><input type="button" id="Color2B_1" class="ctrl" onclick="ColorCtrl(2301)"><input type="button" id="Color2B_2" class="ctrl" onclick="ColorCtrl(2302)"><input type="button" id="Color2B_3" class="ctrl" onclick="ColorCtrl(2303)"><input type="button" id="Color2B_4" class="ctrl" onclick="ColorCtrl(2304)"></span>
+      <span id="Color2B_Ctrl1"><input type="button" id="Color2B_5" class="ctrl" onclick="ColorCtrl(2305)"><input type="button" id="Color2B_6" class="ctrl" onclick="ColorCtrl(2306)"></span>
+     </td>
+    </tr>
+    <tr>
+     <td align="center" valign="center"><span id="Color3">Back</span><input type="hidden" id="Color3R" value="0"><input type="hidden" id="Color3G" value="0"><input type="hidden" id="Color3B" value="0"></td>
+     <td align="center" valign="center">
+      <span id="Color3R_Ctrl0"><input type="button" id="Color3R_0" class="ctrl" onclick="ColorCtrl(3100)"><input type="button" id="Color3R_1" class="ctrl" onclick="ColorCtrl(3101)"><input type="button" id="Color3R_2" class="ctrl" onclick="ColorCtrl(3102)"><input type="button" id="Color3R_3" class="ctrl" onclick="ColorCtrl(3103)"><input type="button" id="Color3R_4" class="ctrl" onclick="ColorCtrl(3104)"></span>
+      <span id="Color3R_Ctrl1"><input type="button" id="Color3R_5" class="ctrl" onclick="ColorCtrl(3105)"><input type="button" id="Color3R_6" class="ctrl" onclick="ColorCtrl(3106)"></span>
+     </td>
+     <td align="center" valign="center">
+      <span id="Color3G_Ctrl0"><input type="button" id="Color3G_0" class="ctrl" onclick="ColorCtrl(3200)"><input type="button" id="Color3G_1" class="ctrl" onclick="ColorCtrl(3201)"><input type="button" id="Color3G_2" class="ctrl" onclick="ColorCtrl(3202)"><input type="button" id="Color3G_3" class="ctrl" onclick="ColorCtrl(3203)"><input type="button" id="Color3G_4" class="ctrl" onclick="ColorCtrl(3204)"></span>
+      <span id="Color3G_Ctrl1"><input type="button" id="Color3G_5" class="ctrl" onclick="ColorCtrl(3205)"><input type="button" id="Color3G_6" class="ctrl" onclick="ColorCtrl(3206)"></span>
+     </td>
+     <td align="center" valign="center">
+      <span id="Color3B_Ctrl0"><input type="button" id="Color3B_0" class="ctrl" onclick="ColorCtrl(3300)"><input type="button" id="Color3B_1" class="ctrl" onclick="ColorCtrl(3301)"><input type="button" id="Color3B_2" class="ctrl" onclick="ColorCtrl(3302)"><input type="button" id="Color3B_3" class="ctrl" onclick="ColorCtrl(3303)"><input type="button" id="Color3B_4" class="ctrl" onclick="ColorCtrl(3304)"></span>
+      <span id="Color3B_Ctrl1"><input type="button" id="Color3B_5" class="ctrl" onclick="ColorCtrl(3305)"><input type="button" id="Color3B_6" class="ctrl" onclick="ColorCtrl(3306)"></span>
+     </td>
+    </tr>
+    <tr>
+     <td align="center" valign="center"><span id="Color4">Cursor</span><input type="hidden" id="Color4R" value="0"><input type="hidden" id="Color4G" value="0"><input type="hidden" id="Color4B" value="0"></td>
+     <td align="center" valign="center">
+      <span id="Color4R_Ctrl0"><input type="button" id="Color4R_0" class="ctrl" onclick="ColorCtrl(4100)"><input type="button" id="Color4R_1" class="ctrl" onclick="ColorCtrl(4101)"><input type="button" id="Color4R_2" class="ctrl" onclick="ColorCtrl(4102)"><input type="button" id="Color4R_3" class="ctrl" onclick="ColorCtrl(4103)"><input type="button" id="Color4R_4" class="ctrl" onclick="ColorCtrl(4104)"></span>
+      <span id="Color4R_Ctrl1"><input type="button" id="Color4R_5" class="ctrl" onclick="ColorCtrl(4105)"><input type="button" id="Color4R_6" class="ctrl" onclick="ColorCtrl(4106)"></span>
+     </td>
+     <td align="center" valign="center">
+      <span id="Color4G_Ctrl0"><input type="button" id="Color4G_0" class="ctrl" onclick="ColorCtrl(4200)"><input type="button" id="Color4G_1" class="ctrl" onclick="ColorCtrl(4201)"><input type="button" id="Color4G_2" class="ctrl" onclick="ColorCtrl(4202)"><input type="button" id="Color4G_3" class="ctrl" onclick="ColorCtrl(4203)"><input type="button" id="Color4G_4" class="ctrl" onclick="ColorCtrl(4204)"></span>
+      <span id="Color4G_Ctrl1"><input type="button" id="Color4G_5" class="ctrl" onclick="ColorCtrl(4205)"><input type="button" id="Color4G_6" class="ctrl" onclick="ColorCtrl(4206)"></span>
+     </td>
+     <td align="center" valign="center">
+      <span id="Color4B_Ctrl0"><input type="button" id="Color4B_0" class="ctrl" onclick="ColorCtrl(4300)"><input type="button" id="Color4B_1" class="ctrl" onclick="ColorCtrl(4301)"><input type="button" id="Color4B_2" class="ctrl" onclick="ColorCtrl(4302)"><input type="button" id="Color4B_3" class="ctrl" onclick="ColorCtrl(4303)"><input type="button" id="Color4B_4" class="ctrl" onclick="ColorCtrl(4304)"></span>
+      <span id="Color4B_Ctrl1"><input type="button" id="Color4B_5" class="ctrl" onclick="ColorCtrl(4305)"><input type="button" id="Color4B_6" class="ctrl" onclick="ColorCtrl(4306)"></span>
+     </td>
+    </tr>
+   </table>
+
+   <table id="T5" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td width="50%" align="center" valign="center"><input type="button" id="UndoRedo0" value="Undo" onClick="UndoRedo0()" class="ctrl"></td>
+     <td width="50%" align="center" valign="center"><input type="button" id="UndoRedo1" value="Redo" onClick="UndoRedo1()" class="ctrl"></td>
+    </tr>
+   </table>
+
+   <table id="T6" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td colspan="4" align="center" valign="center">
+      <input type="Text" value="" class="ctrl" id="StorageName">
+     </td>
+    </tr>
+    <tr>
+     <td width="25%" align="center" valign="center">
+      <input type="Button" id="Storage1" value="Scene" class="ctrl" onclick="StorageSet(1);">
+     </td>
+     <td width="25%" align="center" valign="center">
+      <input type="Button" id="Storage2" value="Object" class="ctrl" onclick="StorageSet(0);">
+     </td>
+     <td width="25%" align="center" valign="center">
+      <input type="Button" id="Storage3" value="View" class="ctrl" onclick="StorageSet(-1);">
+     </td>
+     <td width="25%" align="center" valign="center">
+      <input type="Button" id="Storage4" value="Remove" class="ctrl" onclick="StorageRem();">
+     </td>
+    </tr>
+    <tr>
+     <td colspan="4" align="center" valign="center">
+      <span id="StorageList"></span>
+     </td>
+    </tr>
+   </table>
+
+   <table id="T7" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
+     <td width="17%" align="center" valign="center">
+      <input type="Button" id="Text1" value="Sparse" class="ctrl" onclick="TextExport(1);"/>
+     </td>
+     <td width="16%" align="center" valign="center">
+      <input type="Button" id="Text2" value="Dense 1" class="ctrl" onclick="TextExport(2);"/>
+     </td>
+     <td width="17%" align="center" valign="center">
+      <input type="Button" id="Text3" value="Dense 2" class="ctrl" onclick="TextExport(3);"/>
+     </td>
+     <td width="17%" align="center" valign="center">
+      <input type="Button" id="Text0" value="Object" class="ctrl" onclick="TextExport(0);"/>
+     </td>
+     <td width="16%" align="center" valign="center">
+      <input type="Button" id="Text_" value="View" class="ctrl" onclick="TextExport(-1);"/>
+     </td>
+     <td width="17%" align="center" valign="center">
+      <input type="Button" id="TextX" value="Retrieve" class="ctrl" onclick="TextImport();"/>
+     </td>
+    </tr>
+    <tr>
+     <td colspan="6" align="center" valign="center">
+      <textarea id="TextBuffer" wrap="off" rows="10" class="ctrl" style="resize:none;white-space:pre;overflow:auto;"></textarea>
+      <br/>
+     </td>
+    </tr>
+   </table>
+   
+  </div>
+
+
+  <br>
+  <br>
+  <br>
+
+  <table width="100%" border="1" cellpadding="0" cellspacing="0">
+   <tr>
+    <td>Canvas width:</td>
+    <td><input type="textbox" id="SET_CanvasW" class="ctrl" onchange="SettingsSet()"></td>
+   </tr>
+   <tr>
+    <td>Canvas height:</td>
+    <td><input type="textbox" id="SET_CanvasH" class="ctrl" onchange="SettingsSet()"></td>
+   </tr>
+   <tr>
+    <td>Text field size:</td>
+    <td><input type="textbox" id="SET_TextBufSize" class="ctrl" onchange="SettingsSet()"></td>
+   </tr>
+   <tr>
+    <td>Text font size:</td>
+    <td><input type="textbox" id="SET_TextFontSize" class="ctrl" onchange="SettingsSet()"></td>
+   </tr>
+   <tr>
+    <td>Control button size:</td>
+    <td><input type="textbox" id="SET_Control3Size" class="ctrl" onchange="SettingsSet()"></td>
+   </tr>
+   <tr>
+    <td>Other button size:</td>
+    <td><input type="textbox" id="SET_Control1Size" class="ctrl" onchange="SettingsSet()"></td>
+   </tr>
+   <tr>
+    <td>Font size:</td>
+    <td><input type="textbox" id="SET_Control2Size" class="ctrl" onchange="SettingsSet()"></td>
+   </tr>
+   <tr>
+    <td>Control repeat time:</td>
+    <td><input type="textbox" id="SET_KeyTimer" class="ctrl" onchange="SettingsSet()"></td>
+   </tr>
+   <tr>
+    <td>Arrow layout:</td>
+    <td><select id="SET_LayoutCtrl" class="ctrl" onchange="SettingsSet()"><option>Four</option><option>Two</option></select></td>
+   </tr>
+   <tr>
+    <td>Color layout:</td>
+    <td><select id="SET_LayoutColor" class="ctrl" onchange="SettingsSet()"><option>Buttons</option><option>Inc/dec</option></select></td>
+   </tr>
+   <tr>
+    <td>Arrangement:</td>
+    <td><select id="SET_LayoutBtn" class="ctrl" onchange="SettingsSet()"><option>Disabled</option><option>Enabled</option></select></td>
+   </tr>
+  </table>
+  <br>
+  <br>
+  <br>
+  <br>
+
+  <script src="unistorage.js"></script>
+  <script src="BlockSimGlobal.js"></script>
+  <script src="BlockSimNumber.js"></script>
+  <script src="BlockSimSettings.js"></script>
+  <script src="BlockSimCore.js"></script>
+  <script src="BlockSimControl.js"></script>
+  <script src="BlockSimColor.js"></script>
+  <script src="BlockSimColorCtrl.js"></script>
+  <script src="BlockSimBlock.js"></script>
+  <script src="BlockSimCursor.js"></script>
+  <script src="BlockSimStruct.js"></script>
+  <script src="BlockSimText.js"></script>
+  <script src="BlockSimClipboard.js"></script>
+  <script src="BlockSimUndoRedo.js"></script>
+  <script src="BlockSimInit.js"></script>
+ </body>
+</html>
