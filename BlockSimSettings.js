@@ -138,21 +138,108 @@ function GuiSetSplit(N)
 
 function GuiSetControls()
 {
+    let CtrlTwoParts = SET_LayoutCtrl >= 4 ? true : false;
+
     let Size1 = "2%";
     let Size2 = "7%";
     let Size3 = "4%";
 
     // 100% = Size1 + Size2*3 + Size3 + Size2*3 + Size3 + Size2*3 + Size3 + Size2*3 + Size1
+    // 100% = Size1 + Size2*3 + Size3 + Size2*3 + Size1
+    
+    switch (SET_LayoutCtrl)
+    {
+        case 0:
+            {
+                Size1 = "2%";
+                Size2 = "7%";
+                Size3 = "4%";
+            }
+            break;
+        case 1:
+            {
+                Size1 = "2%";
+                Size2 = "6%";
+                Size3 = "8%";
+            }
+            break;
+        case 2:
+            {
+                Size1 = "5%";
+                Size2 = "6%";
+                Size3 = "6%";
+            }
+            break;
+        case 3:
+            {
+                Size1 = "5%";
+                Size2 = "5%";
+                Size3 = "10%";
+            }
+            break;
+        case 4:
+            {
+                Size1 = "3%";
+                Size2 = "15%";
+                Size3 = "4%";
+            }
+            break;
+        case 5:
+            {
+                Size1 = "5%";
+                Size2 = "14%";
+                Size3 = "6%";
+            }
+            break;
+        case 6:
+            {
+                Size1 = "7%";
+                Size2 = "13%";
+                Size3 = "8%";
+            }
+            break;
+        case 7:
+            {
+                Size1 = "9%";
+                Size2 = "12%";
+                Size3 = "10%";
+            }
+            break;
+        case 8:
+            {
+                Size1 = "11%";
+                Size2 = "11%";
+                Size3 = "12%";
+            }
+            break;
+        case 9:
+            {
+                Size1 = "13%";
+                Size2 = "10%";
+                Size3 = "14%";
+            }
+            break;
+        case 10:
+            {
+                Size1 = "15%";
+                Size2 = "9%";
+                Size3 = "16%";
+            }
+            break;
+        case 11:
+            {
+                Size1 = "17%";
+                Size2 = "8%";
+                Size3 = "18%";
+            }
+            break;
+    }
+    
 
     let CtrlVisMode = 0;
-    if (SET_LayoutCtrl == 1)
+    if (CtrlTwoParts)
     {
         CtrlVisMode = (SET_LayoutCtrlPos + 1);
-        
-        // 100% = Size1 + Size2*3 + Size3 + Size2*3 + Size1
-        Size1 = "3%";
-        Size2 = "15%";
-        Size3 = "4%";
     }
 
     HtmlSetVisible("CtrlBtn01_", 1);
