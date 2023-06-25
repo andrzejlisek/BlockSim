@@ -63,6 +63,10 @@ document.getElementById("CtrlBtn42").value = CharArrowDownLeft + CharArrowDownRi
 document.getElementById("CtrlBtn44").value = CharArrowRight;
 
 
+if (navigator.maxTouchPoints)
+{
+    ClickPrepare(document.body, 0);
+}
 
 
 GuiArrange();

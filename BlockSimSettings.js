@@ -436,14 +436,12 @@ function GuiSetControls()
     document.getElementById("Text0").style["font-size"] = SET_Control2Size + "px";
     document.getElementById("Text1").style["font-size"] = SET_Control2Size + "px";
     document.getElementById("Text2").style["font-size"] = SET_Control2Size + "px";
-    document.getElementById("Text3").style["font-size"] = SET_Control2Size + "px";
 
     document.getElementById("TextX").style["height"] = SET_Control1Size + "px";
     document.getElementById("Text_").style["height"] = SET_Control1Size + "px";
     document.getElementById("Text0").style["height"] = SET_Control1Size + "px";
     document.getElementById("Text1").style["height"] = SET_Control1Size + "px";
     document.getElementById("Text2").style["height"] = SET_Control1Size + "px";
-    document.getElementById("Text3").style["height"] = SET_Control1Size + "px";
 
 
     document.getElementById("UndoRedo0").style["font-size"] = SET_Control2Size + "px";

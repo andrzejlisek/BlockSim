@@ -68,6 +68,7 @@ function BufExport(Mode)
                 Buf = Buf + "|" + BufExportColor(Obj.Color1R, Obj.Color1G, Obj.Color1B);
                 Buf = Buf + "|" + BufExportColor(Obj.Color2R, Obj.Color2G, Obj.Color2B);
                 Buf = Buf + "|" + BufExportFace(Obj.Face2, Obj.Face3) + BufExportFace(Obj.Face0, Obj.Face1) + BufExportFace(Obj.Face4, Obj.Face5);
+                Buf = Buf + "|000";
                 Buf = Buf + "\n";
             }
         }
@@ -83,60 +84,40 @@ function BufExport(Mode)
                 Buf = Buf + "|" + BufExportColor(Obj.Color1R, Obj.Color1G, Obj.Color1B);
                 Buf = Buf + "|" + BufExportColor(Obj.Color2R, Obj.Color2G, Obj.Color2B);
                 Buf = Buf + "|" + BufExportFace(Obj.Face2, Obj.Face3) + BufExportFace(Obj.Face0, Obj.Face1) + BufExportFace(Obj.Face4, Obj.Face5);
+                Buf = Buf + "|000";
                 Buf = Buf + "\n";
             }
         }
     }
-    if ((Mode == 2) || (Mode == 3))
+    if (Mode == 2)
     {
-        var Buf1;
-        var Buf2;
-        var Buf3;
+        let Buf1;
+        let Buf2;
         for (var ZZZ = MinZ; ZZZ <= MaxZ; ZZZ++)
         {
             for (var YYY = MinY; YYY <= MaxY; YYY++)
             {
-                if (Mode == 2)
+                Buf1 = "";
+                Buf2 = "";
+                for (var XXX = MinX; XXX <= MaxX; XXX++)
                 {
-                    Buf1 = "";
-                    Buf2 = "";
-                    Buf3 = "";
-                    for (var XXX = MinX; XXX <= MaxX; XXX++)
+                    Obj = SceneGet(XXX, YYY, ZZZ);
+                    if (Obj)
                     {
-                        Obj = SceneGet(XXX, YYY, ZZZ);
-                        if (Obj)
-                        {
-                            Buf1 += BufExportColor(Obj.Color1R, Obj.Color1G, Obj.Color1B);
-                            Buf2 += BufExportColor(Obj.Color2R, Obj.Color2G, Obj.Color2B);
-                            Buf3 += (BufExportFace(Obj.Face2, Obj.Face3) + BufExportFace(Obj.Face0, Obj.Face1) + BufExportFace(Obj.Face4, Obj.Face5));
-                        }
-                        else
-                        {
-                            Buf1 += "___";
-                            Buf2 += "___";
-                            Buf3 += "___";
-                        }
+                        Buf1 += BufExportColor(Obj.Color1R, Obj.Color1G, Obj.Color1B);
+                        Buf1 += BufExportColor(Obj.Color2R, Obj.Color2G, Obj.Color2B);
+                        Buf2 += (BufExportFace(Obj.Face2, Obj.Face3) + BufExportFace(Obj.Face0, Obj.Face1) + BufExportFace(Obj.Face4, Obj.Face5));
+                        Buf2 += "000";
                     }
-                    Buf = Buf + Buf1 + "\n" + Buf2 + "\n" + Buf3 + "\n";
-                }
-                if (Mode == 3)
-                {
-                    for (var XXX = MinX; XXX <= MaxX; XXX++)
+                    else
                     {
-                        Obj = SceneGet(XXX, YYY, ZZZ);
-                        if (Obj)
-                        {
-                            Buf += BufExportColor(Obj.Color1R, Obj.Color1G, Obj.Color1B);
-                            Buf += BufExportColor(Obj.Color2R, Obj.Color2G, Obj.Color2B);
-                            Buf += (BufExportFace(Obj.Face2, Obj.Face3) + BufExportFace(Obj.Face0, Obj.Face1) + BufExportFace(Obj.Face4, Obj.Face5));
-                        }
-                        else
-                        {
-                            Buf += "_________";
-                        }
+                        Buf1 += "___";
+                        Buf1 += "___";
+                        Buf2 += "___";
+                        Buf2 += "___";
                     }
-                    Buf = Buf + "\n";
                 }
+                Buf = Buf + Buf1 + "\n" + Buf2 + "\n";
             }
         }
     }
@@ -340,11 +321,12 @@ function BufImport(Buf_)
                 }
             }
         }
-        if ((Mode == 2) || (Mode == 3))
+        if (Mode == 2)
         {
-            var Buf1 = "";
-            var Buf2 = "";
-            var Buf3 = "";
+            let Buf1 = "";
+            let Buf2 = "";
+            let Buf3 = "";
+            let Buf4 = "";
             var I = BufDataIdx;
             var II;
             var ElementAllowed;
@@ -353,54 +335,28 @@ function BufImport(Buf_)
                 for (var YYY = MinY; YYY <= MaxY; YYY++)
                 {
                     II = 0;
-                    if (Mode == 2)
+                    for (var XXX = MinX; XXX <= MaxX; XXX++)
                     {
-                        for (var XXX = MinX; XXX <= MaxX; XXX++)
+                        Buf1 = Buf[I + 0].substr(II + 0, 3);
+                        Buf2 = Buf[I + 0].substr(II + 3, 3);
+                        Buf3 = Buf[I + 1].substr(II + 0, 3);
+                        Buf4 = Buf[I + 1].substr(II + 3, 3);
+                        Buf3 = Replace(Buf3, " ", "0");
+                        Buf3 = Replace(Buf3, "_", "0");
+                        Buf3 = Replace(Buf3, "<", "1");
+                        Buf3 = Replace(Buf3, "^", "1");
+                        Buf3 = Replace(Buf3, "#", "1");
+                        Buf3 = Replace(Buf3, ">", "2");
+                        Buf3 = Replace(Buf3, "v", "2");
+                        Buf3 = Replace(Buf3, ".", "2");
+                        Buf3 = Replace(Buf3, "X", "3");
+                        if (BufImportIsColor(Buf1, Buf2))
                         {
-                            Buf1 = Buf[I + 0].substr(II, 3);
-                            Buf2 = Buf[I + 1].substr(II, 3);
-                            Buf3 = Buf[I + 2].substr(II, 3);
-                            Buf3 = Replace(Buf3, " ", "0");
-                            Buf3 = Replace(Buf3, "_", "0");
-                            Buf3 = Replace(Buf3, "<", "1");
-                            Buf3 = Replace(Buf3, "^", "1");
-                            Buf3 = Replace(Buf3, "#", "1");
-                            Buf3 = Replace(Buf3, ">", "2");
-                            Buf3 = Replace(Buf3, "v", "2");
-                            Buf3 = Replace(Buf3, ".", "2");
-                            Buf3 = Replace(Buf3, "X", "3");
-                            if (BufImportIsColor(Buf1, Buf2))
-                            {
-                                BufImportSetColorFaces(SceneAdd(XXX, YYY, ZZZ), Buf1, Buf2, Buf3);
-                            }
-                            II += 3;
+                            BufImportSetColorFaces(SceneAdd(XXX, YYY, ZZZ), Buf1, Buf2, Buf3);
                         }
-                        I += 3;
+                        II += 6;
                     }
-                    if (Mode == 3)
-                    {
-                        for (var XXX = MinX; XXX <= MaxX; XXX++)
-                        {
-                            Buf1 = Buf[I].substr(II + 0, 3);
-                            Buf2 = Buf[I].substr(II + 3, 3);
-                            Buf3 = Buf[I].substr(II + 6, 3);
-                            Buf3 = Replace(Buf3, " ", "0");
-                            Buf3 = Replace(Buf3, "_", "0");
-                            Buf3 = Replace(Buf3, "<", "1");
-                            Buf3 = Replace(Buf3, "^", "1");
-                            Buf3 = Replace(Buf3, "#", "1");
-                            Buf3 = Replace(Buf3, ">", "2");
-                            Buf3 = Replace(Buf3, "v", "2");
-                            Buf3 = Replace(Buf3, ".", "2");
-                            Buf3 = Replace(Buf3, "X", "3");
-                            if (BufImportIsColor(Buf1, Buf2))
-                            {
-                                BufImportSetColorFaces(SceneAdd(XXX, YYY, ZZZ), Buf1, Buf2, Buf3);
-                            }
-                            II += 9;
-                        }
-                        I++;
-                    }
+                    I += 2;
                 }
             }
         }

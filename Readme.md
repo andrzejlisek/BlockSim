@@ -126,8 +126,7 @@ These buttons has the following actions:
 
 
 * **Sparse** \- Generate text describing whole scene in sparse format\.
-* **Dense 1** \- Generate text describing whole scene in dense format\.
-* **Dense 2** \- Generate text describing whole scene in dense format\.
+* **Dense** \- Generate text describing whole scene in dense format\.
 * **Object** \- Generate text describing object under cursor\.
 * **View** \- Generate text describing current camera view only\.
 * **Retrieve** \- Aquire the text from field and read as scene/object/view depending on text description\.
