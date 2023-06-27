@@ -88,8 +88,8 @@ function GuiSwap(Swap1, Swap2, N)
             SET_Layout_R = GuiSwapWork(Swap1, Swap2, SET_Layout_R);
         }
     }
-    DataSet("SET_Layout_L", SET_Layout_L);
-    DataSet("SET_Layout_R", SET_Layout_R);
+    DataSet(LSPrefix + "SET_Layout_L", SET_Layout_L);
+    DataSet(LSPrefix + "SET_Layout_R", SET_Layout_R);
     GuiArrange();
 }
 
@@ -132,7 +132,7 @@ function GuiSetSplit(N)
     {
         SET_Layout_Split++;
     }
-    DataSet("SET_Layout_Split", SET_Layout_Split);
+    DataSet(LSPrefix + "SET_Layout_Split", SET_Layout_Split);
     GuiArrange();
 }
 
@@ -523,7 +523,7 @@ function GuiControlsChange()
     {
         SET_LayoutCtrlPos = 0;
     }
-    DataSet("SET_LayoutCtrlPos", SET_LayoutCtrlPos);
+    DataSet(LSPrefix + "SET_LayoutCtrlPos", SET_LayoutCtrlPos);
     GuiSetControls();
 }
 
@@ -566,17 +566,17 @@ function SettingsSet()
     SET_LayoutColor = document.getElementById("SET_LayoutColor").selectedIndex;
     SET_LayoutBtn = document.getElementById("SET_LayoutBtn").selectedIndex;
 
-    DataSet("SET_CanvasW", SET_CanvasW);
-    DataSet("SET_CanvasH", SET_CanvasH);
-    DataSet("SET_TextBufSize", SET_TextBufSize);
-    DataSet("SET_TextFontSize", SET_TextFontSize);
-    DataSet("SET_Control1Size", SET_Control1Size);
-    DataSet("SET_Control2Size", SET_Control2Size);
-    DataSet("SET_Control3Size", SET_Control3Size);
-    DataSet("SET_KeyTimer", SET_KeyTimer);
-    DataSet("SET_LayoutCtrl", SET_LayoutCtrl);
-    DataSet("SET_LayoutColor", SET_LayoutColor);
-    DataSet("SET_LayoutBtn", SET_LayoutBtn);
+    DataSet(LSPrefix + "SET_CanvasW", SET_CanvasW);
+    DataSet(LSPrefix + "SET_CanvasH", SET_CanvasH);
+    DataSet(LSPrefix + "SET_TextBufSize", SET_TextBufSize);
+    DataSet(LSPrefix + "SET_TextFontSize", SET_TextFontSize);
+    DataSet(LSPrefix + "SET_Control1Size", SET_Control1Size);
+    DataSet(LSPrefix + "SET_Control2Size", SET_Control2Size);
+    DataSet(LSPrefix + "SET_Control3Size", SET_Control3Size);
+    DataSet(LSPrefix + "SET_KeyTimer", SET_KeyTimer);
+    DataSet(LSPrefix + "SET_LayoutCtrl", SET_LayoutCtrl);
+    DataSet(LSPrefix + "SET_LayoutColor", SET_LayoutColor);
+    DataSet(LSPrefix + "SET_LayoutBtn", SET_LayoutBtn);
     
     GuiSetCanvas();
     GuiSetControls();

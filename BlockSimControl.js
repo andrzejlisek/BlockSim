@@ -60,22 +60,22 @@ function ScrKeyRepeat(N, X)
     if (N == 1)
     {
         SET_KeyRepeat1 = X;
-        DataSet("SET_KeyRepeat1", X ? "1" : "0");
+        DataSet(LSPrefix + "SET_KeyRepeat1", X ? "1" : "0");
     }
     if (N == 2)
     {
         SET_KeyRepeat2 = X;
-        DataSet("SET_KeyRepeat2", X ? "1" : "0");
+        DataSet(LSPrefix + "SET_KeyRepeat2", X ? "1" : "0");
     }
     if (N == 3)
     {
         SET_KeyRepeat3 = X;
-        DataSet("SET_KeyRepeat3", X ? "1" : "0");
+        DataSet(LSPrefix + "SET_KeyRepeat3", X ? "1" : "0");
     }
     if (N == 4)
     {
         SET_KeyRepeat4 = X;
-        DataSet("SET_KeyRepeat4", X ? "1" : "0");
+        DataSet(LSPrefix + "SET_KeyRepeat4", X ? "1" : "0");
     }
 }
 
@@ -124,7 +124,7 @@ function KeyCapture(X)
     if (SET_Keyboard != X)
     {
         SET_Keyboard = X;
-        DataSet("SET_Keyboard", X ? "1" : "0");
+        DataSet(LSPrefix + "SET_Keyboard", X ? "1" : "0");
         CameraPosAng();
         RetentionCamCur();
     }
@@ -150,13 +150,13 @@ function KeyPress(e)
         case 78: // N
             {
                 SET_KeybStateCursor = false;
-                DataSet("SET_KeybStateCursor", SET_KeybStateCursor ? "1" : "0");
+                DataSet(LSPrefix + "SET_KeybStateCursor", SET_KeybStateCursor ? "1" : "0");
             }
             break;
         case 77: // M
             {
                 SET_KeybStateCursor = true;
-                DataSet("SET_KeybStateCursor", SET_KeybStateCursor ? "1" : "0");
+                DataSet(LSPrefix + "SET_KeybStateCursor", SET_KeybStateCursor ? "1" : "0");
             }
             break;
 

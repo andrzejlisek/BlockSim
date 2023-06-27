@@ -476,28 +476,28 @@ function StorageSet(Mode)
 
     for (let I = 0; I < N; I++)
     {
-        if (DataGet("OBJ_N_" + I) == X)
+        if (DataGet(LSPrefix + "OBJ_N_" + I) == X)
         {
-            DataSet("OBJ_V_" + I, V);
+            DataSet(LSPrefix + "OBJ_V_" + I, V);
             StorageList();
             return;
         }
-        if (DataGet("OBJ_N_" + I) > X)
+        if (DataGet(LSPrefix + "OBJ_N_" + I) > X)
         {
             for (let II = N; II > I; II--)
             {
-                DataSet("OBJ_N_" + II, DataGet("OBJ_N_" + (II - 1)));
-                DataSet("OBJ_V_" + II, DataGet("OBJ_V_" + (II - 1)));
+                DataSet(LSPrefix + "OBJ_N_" + II, DataGet(LSPrefix + "OBJ_N_" + (II - 1)));
+                DataSet(LSPrefix + "OBJ_V_" + II, DataGet(LSPrefix + "OBJ_V_" + (II - 1)));
             }
-            DataSet("OBJ_N_" + I, X);
-            DataSet("OBJ_V_" + I, V);
+            DataSet(LSPrefix + "OBJ_N_" + I, X);
+            DataSet(LSPrefix + "OBJ_V_" + I, V);
             StorageList();
             return;
         }
     }
 
-    DataSet("OBJ_N_" + N, X);
-    DataSet("OBJ_V_" + N, V);
+    DataSet(LSPrefix + "OBJ_N_" + N, X);
+    DataSet(LSPrefix + "OBJ_V_" + N, V);
     StorageList();
 }
 
@@ -509,15 +509,15 @@ function StorageRem()
     let Idx = -1;
     for (let I = 0; I < N; I++)
     {
-        if (DataGet("OBJ_N_" + I) == X)
+        if (DataGet(LSPrefix + "OBJ_N_" + I) == X)
         {
             for (let II = I; II < (N - 1); II++)
             {
-                DataSet("OBJ_N_" + II, DataGet("OBJ_N_" + (II + 1)));
-                DataSet("OBJ_V_" + II, DataGet("OBJ_V_" + (II + 1)));
+                DataSet(LSPrefix + "OBJ_N_" + II, DataGet(LSPrefix + "OBJ_N_" + (II + 1)));
+                DataSet(LSPrefix + "OBJ_V_" + II, DataGet(LSPrefix + "OBJ_V_" + (II + 1)));
             }
-            DataDelete("OBJ_N_" + (N - 1));
-            DataDelete("OBJ_V_" + (N - 1));
+            DataDelete(LSPrefix + "OBJ_N_" + (N - 1));
+            DataDelete(LSPrefix + "OBJ_V_" + (N - 1));
             StorageList();
             return;
         }
@@ -526,10 +526,10 @@ function StorageRem()
 
 function StorageInput(X)
 {
-    if (DataExists("OBJ_N_" + X) && DataExists("OBJ_V_" + X))
+    if (DataExists(LSPrefix + "OBJ_N_" + X) && DataExists(LSPrefix + "OBJ_V_" + X))
     {
-        document.getElementById("StorageName").value = DataGet("OBJ_N_" + X);
-        BufImport(DataGet("OBJ_V_" + X));
+        document.getElementById("StorageName").value = DataGet(LSPrefix + "OBJ_N_" + X);
+        BufImport(DataGet(LSPrefix + "OBJ_V_" + X));
     }
 }
 
@@ -537,10 +537,10 @@ function StorageList()
 {
     let I = 0;
     let X = "";
-    while (DataExists("OBJ_N_" + I))
+    while (DataExists(LSPrefix + "OBJ_N_" + I))
     {
-        X = X + "<input type=\"button\" value=\"" + DataGet("OBJ_N_" + I) + "\" onclick=\"StorageInput(" + I + ");\" style=\"height:" + SET_Control1Size + "px;font-size:" + SET_Control2Size + "px\"> ";
-        //X = X + "<a href=\"javascript:void(0);\" onclick=\"StorageInput(" + I + ");\">" + DataGet("OBJ_N_" + I) + "</a><br/>";
+        X = X + "<input type=\"button\" value=\"" + DataGet(LSPrefix + "OBJ_N_" + I) + "\" onclick=\"StorageInput(" + I + ");\" style=\"height:" + SET_Control1Size + "px;font-size:" + SET_Control2Size + "px\"> ";
+        //X = X + "<a href=\"javascript:void(0);\" onclick=\"StorageInput(" + I + ");\">" + DataGet(LSPrefix + "OBJ_N_" + I) + "</a><br/>";
         I++;
     }
     document.getElementById("StorageList").innerHTML = X;

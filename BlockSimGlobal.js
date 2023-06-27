@@ -1,3 +1,5 @@
+const LSPrefix = "BlockSim_";
+
 var SET_Layout_Split = 0;
 var SET_Layout_L = "";
 var SET_Layout_R = "012345678";
@@ -22,29 +24,29 @@ var SET_KeyRepeat4 = true;
 
 var SET_KeybStateCursor = false;
 
-if (DataExists("SET_Layout_L")) { SET_Layout_L = DataGet("SET_Layout_L"); }
-if (DataExists("SET_Layout_R")) { SET_Layout_R = DataGet("SET_Layout_R"); }
-if (DataExists("SET_Layout_Split")) { SET_Layout_Split = DataGetI("SET_Layout_Split"); }
-if (DataExists("SET_LayoutCtrl")) { SET_LayoutCtrl = DataGetI("SET_LayoutCtrl"); }
-if (DataExists("SET_LayoutCtrlPos")) { SET_LayoutCtrlPos = DataGetI("SET_LayoutCtrlPos"); }
-if (DataExists("SET_LayoutBtn")) { SET_LayoutBtn = DataGetI("SET_LayoutBtn"); }
-if (DataExists("SET_LayoutColor")) { SET_LayoutColor = DataGetI("SET_LayoutColor"); }
-if (DataExists("SET_CanvasW")) { SET_CanvasW = DataGetI("SET_CanvasW"); }
-if (DataExists("SET_CanvasH")) { SET_CanvasH = DataGetI("SET_CanvasH"); }
-if (DataExists("SET_TextBufSize")) { SET_TextBufSize = DataGetI("SET_TextBufSize"); }
-if (DataExists("SET_TextFontSize")) { SET_TextFontSize = DataGetI("SET_TextFontSize"); }
-if (DataExists("SET_Control1Size")) { SET_Control1Size = DataGetI("SET_Control1Size"); }
-if (DataExists("SET_Control2Size")) { SET_Control2Size = DataGetI("SET_Control2Size"); }
-if (DataExists("SET_Control3Size")) { SET_Control3Size = DataGetI("SET_Control3Size"); }
-if (DataExists("SET_KeyTimer")) { SET_KeyTimer = DataGetI("SET_KeyTimer"); }
+if (DataExists(LSPrefix + "SET_Layout_L")) { SET_Layout_L = DataGet(LSPrefix + "SET_Layout_L"); }
+if (DataExists(LSPrefix + "SET_Layout_R")) { SET_Layout_R = DataGet(LSPrefix + "SET_Layout_R"); }
+if (DataExists(LSPrefix + "SET_Layout_Split")) { SET_Layout_Split = DataGetI(LSPrefix + "SET_Layout_Split"); }
+if (DataExists(LSPrefix + "SET_LayoutCtrl")) { SET_LayoutCtrl = DataGetI(LSPrefix + "SET_LayoutCtrl"); }
+if (DataExists(LSPrefix + "SET_LayoutCtrlPos")) { SET_LayoutCtrlPos = DataGetI(LSPrefix + "SET_LayoutCtrlPos"); }
+if (DataExists(LSPrefix + "SET_LayoutBtn")) { SET_LayoutBtn = DataGetI(LSPrefix + "SET_LayoutBtn"); }
+if (DataExists(LSPrefix + "SET_LayoutColor")) { SET_LayoutColor = DataGetI(LSPrefix + "SET_LayoutColor"); }
+if (DataExists(LSPrefix + "SET_CanvasW")) { SET_CanvasW = DataGetI(LSPrefix + "SET_CanvasW"); }
+if (DataExists(LSPrefix + "SET_CanvasH")) { SET_CanvasH = DataGetI(LSPrefix + "SET_CanvasH"); }
+if (DataExists(LSPrefix + "SET_TextBufSize")) { SET_TextBufSize = DataGetI(LSPrefix + "SET_TextBufSize"); }
+if (DataExists(LSPrefix + "SET_TextFontSize")) { SET_TextFontSize = DataGetI(LSPrefix + "SET_TextFontSize"); }
+if (DataExists(LSPrefix + "SET_Control1Size")) { SET_Control1Size = DataGetI(LSPrefix + "SET_Control1Size"); }
+if (DataExists(LSPrefix + "SET_Control2Size")) { SET_Control2Size = DataGetI(LSPrefix + "SET_Control2Size"); }
+if (DataExists(LSPrefix + "SET_Control3Size")) { SET_Control3Size = DataGetI(LSPrefix + "SET_Control3Size"); }
+if (DataExists(LSPrefix + "SET_KeyTimer")) { SET_KeyTimer = DataGetI(LSPrefix + "SET_KeyTimer"); }
 
-if (DataExists("SET_Keyboard")) { SET_Keyboard = ((DataGetI("SET_Keyboard") > 0) ? true : false); }
-if (DataExists("SET_KeyRepeat1")) { SET_KeyRepeat1 = ((DataGetI("SET_KeyRepeat1") > 0) ? true : false); }
-if (DataExists("SET_KeyRepeat2")) { SET_KeyRepeat2 = ((DataGetI("SET_KeyRepeat2") > 0) ? true : false); }
-if (DataExists("SET_KeyRepeat3")) { SET_KeyRepeat3 = ((DataGetI("SET_KeyRepeat3") > 0) ? true : false); }
-if (DataExists("SET_KeyRepeat4")) { SET_KeyRepeat4 = ((DataGetI("SET_KeyRepeat4") > 0) ? true : false); }
+if (DataExists(LSPrefix + "SET_Keyboard")) { SET_Keyboard = ((DataGetI(LSPrefix + "SET_Keyboard") > 0) ? true : false); }
+if (DataExists(LSPrefix + "SET_KeyRepeat1")) { SET_KeyRepeat1 = ((DataGetI(LSPrefix + "SET_KeyRepeat1") > 0) ? true : false); }
+if (DataExists(LSPrefix + "SET_KeyRepeat2")) { SET_KeyRepeat2 = ((DataGetI(LSPrefix + "SET_KeyRepeat2") > 0) ? true : false); }
+if (DataExists(LSPrefix + "SET_KeyRepeat3")) { SET_KeyRepeat3 = ((DataGetI(LSPrefix + "SET_KeyRepeat3") > 0) ? true : false); }
+if (DataExists(LSPrefix + "SET_KeyRepeat4")) { SET_KeyRepeat4 = ((DataGetI(LSPrefix + "SET_KeyRepeat4") > 0) ? true : false); }
 
-if (DataExists("SET_KeybStateCursor")) { SET_KeybStateCursor = ((DataGetI("SET_KeybStateCursor") > 0) ? true : false); }
+if (DataExists(LSPrefix + "SET_KeybStateCursor")) { SET_KeybStateCursor = ((DataGetI(LSPrefix + "SET_KeybStateCursor") > 0) ? true : false); }
 
 
 var RenderUpd = true;

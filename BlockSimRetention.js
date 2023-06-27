@@ -5,8 +5,8 @@ let RetentionDataCount = 0;
 let RetentionDataHole = [];
 let RetentionDataMap = {};
 
-if (DataExists("RetentionCounter")) { RetentionCounter = DataGetI("RetentionCounter"); }
-if (DataExists("RetentionDataCount")) { RetentionDataCount = DataGetI("RetentionDataCount"); }
+if (DataExists(LSPrefix + "RetentionCounter")) { RetentionCounter = DataGetI(LSPrefix + "RetentionCounter"); }
+if (DataExists(LSPrefix + "RetentionDataCount")) { RetentionDataCount = DataGetI(LSPrefix + "RetentionDataCount"); }
 
 function RetentionClear()
 {
@@ -14,35 +14,35 @@ function RetentionClear()
     RetentionDataHole = [];
     for (let I = 0; I < RetentionDataCount; I++)
     {
-        if (DataExists("RetentionData_" + I))
+        if (DataExists(LSPrefix + "RetentionData_" + I))
         {
-            DataDelete("RetentionData_" + I);
+            DataDelete(LSPrefix + "RetentionData_" + I);
         }
     }
     RetentionDataCount = 0;
-    DataSet("RetentionDataCount", RetentionDataCount);
+    DataSet(LSPrefix + "RetentionDataCount", RetentionDataCount);
 }
 
 function RetentionAdd(Idx, Obj)
 {
     if (Idx in RetentionDataMap)
     {
-        DataSet("RetentionData_" + RetentionDataMap[Idx], JSON.stringify(Obj.GetInfo()));
+        DataSet(LSPrefix + "RetentionData_" + RetentionDataMap[Idx], JSON.stringify(Obj.GetInfo()));
     }
     else
     {
         if (RetentionDataHole.length > 0)
         {
-            DataSet("RetentionData_" + RetentionDataHole[0], JSON.stringify(Obj.GetInfo()));
+            DataSet(LSPrefix + "RetentionData_" + RetentionDataHole[0], JSON.stringify(Obj.GetInfo()));
             RetentionDataMap[Idx] = RetentionDataHole[0];
             RetentionDataHole.splice(0, 1);
         }
         else
         {
             RetentionDataMap[Idx] = RetentionDataCount;
-            DataSet("RetentionData_" + RetentionDataCount, JSON.stringify(Obj.GetInfo()));
+            DataSet(LSPrefix + "RetentionData_" + RetentionDataCount, JSON.stringify(Obj.GetInfo()));
             RetentionDataCount++;
-            DataSet("RetentionDataCount", RetentionDataCount);
+            DataSet(LSPrefix + "RetentionDataCount", RetentionDataCount);
         }
     }
 
@@ -54,7 +54,7 @@ function RetentionRem(Idx)
     if (Idx in RetentionDataMap)
     {
         let N = RetentionDataMap[Idx];
-        DataDelete("RetentionData_" + N);
+        DataDelete(LSPrefix + "RetentionData_" + N);
         RetentionDataHole.push(N);
         
         delete RetentionDataMap[Idx];
@@ -68,7 +68,7 @@ function RetentionRem(Idx)
             RetentionDataHole.splice(IdxOf, 1);
             
             RetentionDataCount--;
-            DataSet("RetentionDataCount", RetentionDataCount);
+            DataSet(LSPrefix + "RetentionDataCount", RetentionDataCount);
 
             IdxOf = RetentionDataHole.indexOf(RetentionDataCount - 1);
         }
@@ -85,7 +85,7 @@ function RetentionAddObj(Obj)
 function RetentionResetCounter()
 {
     RetentionCounter = 0;
-    DataSet("RetentionCounter", RetentionCounter);
+    DataSet(LSPrefix + "RetentionCounter", RetentionCounter);
 }
 
 function RetentionCamCur()
@@ -122,7 +122,7 @@ function RetentionCamCur()
     
     RetentionHeader.EditState = EditState;
 
-    DataSet("RetentionHeader", JSON.stringify(RetentionHeader));
+    DataSet(LSPrefix + "RetentionHeader", JSON.stringify(RetentionHeader));
 
     RetentionResetCounter();
 }
@@ -140,9 +140,9 @@ function RetentionLoad()
         let RetentionCounter_ = RetentionCounter;
         let EditState_ = 0;
     
-        if (DataExists("RetentionHeader"))
+        if (DataExists(LSPrefix + "RetentionHeader"))
         {
-            RetentionHeader = JSON.parse(DataGet("RetentionHeader"));
+            RetentionHeader = JSON.parse(DataGet(LSPrefix + "RetentionHeader"));
             
             ScaleSet(RetentionHeader.ScaleX, RetentionHeader.ScaleY, RetentionHeader.ScaleZ);
 
@@ -202,38 +202,38 @@ function RetentionLoad()
         CursorEditStateBtn();
 
         RetentionCounter = RetentionCounter_;
-        DataSet("RetentionCounter", RetentionCounter);
+        DataSet(LSPrefix + "RetentionCounter", RetentionCounter);
 
-        if (DataExists("RetentionText"))
+        if (DataExists(LSPrefix + "RetentionText"))
         {
-            document.getElementById("TextBuffer").value = DataGet("RetentionText");
+            document.getElementById("TextBuffer").value = DataGet(LSPrefix + "RetentionText");
         }
     }
     else
     {
         RetentionCounter = 0;
-        DataSet("RetentionCounter", RetentionCounter);
+        DataSet(LSPrefix + "RetentionCounter", RetentionCounter);
         RetentionClear();
         
-        if (DataExists("RetentionText"))
+        if (DataExists(LSPrefix + "RetentionText"))
         {
-            DataDelete("RetentionText");
+            DataDelete(LSPrefix + "RetentionText");
         }
-        if (DataExists("RetentionHeader"))
+        if (DataExists(LSPrefix + "RetentionHeader"))
         {
-            DataDelete("RetentionHeader");
+            DataDelete(LSPrefix + "RetentionHeader");
         }
-        if (DataExists("RetentionDataCount"))
+        if (DataExists(LSPrefix + "RetentionDataCount"))
         {
-            let C = DataGetI("RetentionDataCount");
+            let C = DataGetI(LSPrefix + "RetentionDataCount");
             for (let I = 0; I < C; I++)
             {
-                if (DataExists("RetentionData_" + I))
+                if (DataExists(LSPrefix + "RetentionData_" + I))
                 {
-                    DataDelete("RetentionData_" + I);
+                    DataDelete(LSPrefix + "RetentionData_" + I);
                 }
             }
-            DataDelete("RetentionDataCount");
+            DataDelete(LSPrefix + "RetentionDataCount");
         }        
         document.getElementById("TextBuffer").value = "";
     }
@@ -241,7 +241,7 @@ function RetentionLoad()
 
 function RetentionText()
 {
-    DataSet("RetentionText", document.getElementById("TextBuffer").value);
+    DataSet(LSPrefix + "RetentionText", document.getElementById("TextBuffer").value);
     RetentionResetCounter();
 }
 

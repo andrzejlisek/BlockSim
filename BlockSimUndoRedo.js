@@ -10,17 +10,17 @@ let UndoRedoTempBuf = {};
 
 function UndoRedoToTemp()
 {
-    if (DataExists("UndoRedoBufIdx"))
+    if (DataExists(LSPrefix + "UndoRedoBufIdx"))
     {
-        UndoRedoTempBufIdx = DataGetI("UndoRedoBufIdx");
+        UndoRedoTempBufIdx = DataGetI(LSPrefix + "UndoRedoBufIdx");
     }
     else
     {
         UndoRedoTempBufIdx = 0;
     }
-    if (DataExists("UndoRedoBufSize"))
+    if (DataExists(LSPrefix + "UndoRedoBufSize"))
     {
-        UndoRedoTempBufSize = DataGetI("UndoRedoBufSize");
+        UndoRedoTempBufSize = DataGetI(LSPrefix + "UndoRedoBufSize");
     }
     else
     {
@@ -30,9 +30,9 @@ function UndoRedoToTemp()
     
     for (let I = 0; I < UndoRedoTempBufSize; I++)
     {
-        if (DataExists("UndoRedoBuf_" + UndoRedoBufSize))
+        if (DataExists(LSPrefix + "UndoRedoBuf_" + UndoRedoBufSize))
         {
-            UndoRedoTempBuf[I] = DataGet("UndoRedoBuf_" + I);
+            UndoRedoTempBuf[I] = DataGet(LSPrefix + "UndoRedoBuf_" + I);
         }
     }
 }
@@ -41,14 +41,14 @@ function UndoRedoFromTemp()
 {
     UndoRedoClear();
 
-    DataSet("UndoRedoBufIdx", UndoRedoTempBufIdx);
-    DataSet("UndoRedoBufSize", UndoRedoTempBufSize);
+    DataSet(LSPrefix + "UndoRedoBufIdx", UndoRedoTempBufIdx);
+    DataSet(LSPrefix + "UndoRedoBufSize", UndoRedoTempBufSize);
 
     for (let I = 0; I < UndoRedoTempBufSize; I++)
     {
         if (I in UndoRedoTempBuf)
         {
-            DataSet("UndoRedoBuf_" + I, UndoRedoTempBuf[I]);
+            DataSet(LSPrefix + "UndoRedoBuf_" + I, UndoRedoTempBuf[I]);
         }
     }
     
@@ -60,17 +60,17 @@ function UndoRedoClear()
 {
     UndoRedoBufIdx = 0;
     UndoRedoUnit = false;
-    DataSet("UndoRedoBufIdx", UndoRedoBufIdx);
+    DataSet(LSPrefix + "UndoRedoBufIdx", UndoRedoBufIdx);
 
     while (UndoRedoBufSize > 0)
     {
         UndoRedoBufSize--;
-        if (DataExists("UndoRedoBuf_" + UndoRedoBufSize))
+        if (DataExists(LSPrefix + "UndoRedoBuf_" + UndoRedoBufSize))
         {
-            DataDelete("UndoRedoBuf_" + UndoRedoBufSize);
+            DataDelete(LSPrefix + "UndoRedoBuf_" + UndoRedoBufSize);
         }
     }
-    DataSet("UndoRedoBufSize", UndoRedoBufSize);
+    DataSet(LSPrefix + "UndoRedoBufSize", UndoRedoBufSize);
 }
 
 function UndoRedo0()
@@ -81,11 +81,11 @@ function UndoRedo0()
     }
 
     UndoRedoBufIdx--;
-    DataSet("UndoRedoBufIdx", UndoRedoBufIdx);
+    DataSet(LSPrefix + "UndoRedoBufIdx", UndoRedoBufIdx);
 
-    if (DataExists("UndoRedoBuf_" + UndoRedoBufIdx))
+    if (DataExists(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx))
     {
-        let UndoRedoBufEntry = JSON.parse(DataGet("UndoRedoBuf_" + UndoRedoBufIdx));
+        let UndoRedoBufEntry = JSON.parse(DataGet(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx));
         for (let I = UndoRedoBufEntry.ScreenList.length - 1; I >= 0; I--)
         {
             let X = UndoRedoBufEntry.ScreenList[I].X;
@@ -122,9 +122,9 @@ function UndoRedo1()
         return;
     }
 
-    if (DataExists("UndoRedoBuf_" + UndoRedoBufIdx))
+    if (DataExists(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx))
     {        
-        let UndoRedoBufEntry = JSON.parse(DataGet("UndoRedoBuf_" + UndoRedoBufIdx));
+        let UndoRedoBufEntry = JSON.parse(DataGet(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx));
         for (let I = 0; I < UndoRedoBufEntry.ScreenList.length; I++)
         {
             let X = UndoRedoBufEntry.ScreenList[I].X;
@@ -154,7 +154,7 @@ function UndoRedo1()
     BufScreenRepaint();
 
     UndoRedoBufIdx++;
-    DataSet("UndoRedoBufIdx", UndoRedoBufIdx);
+    DataSet(LSPrefix + "UndoRedoBufIdx", UndoRedoBufIdx);
 }
 
 function UndoRedo(X, Y, Z, Src, Dst)
@@ -201,22 +201,22 @@ function UndoRedoUnitEnd()
 
     if (UndoRedoUnit.ScreenList.length > 0)
     {
-        DataSet("UndoRedoBuf_" + UndoRedoBufIdx, JSON.stringify(UndoRedoUnit));
+        DataSet(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx, JSON.stringify(UndoRedoUnit));
 
         UndoRedoBufIdx++;
-        DataSet("UndoRedoBufIdx", UndoRedoBufIdx);
+        DataSet(LSPrefix + "UndoRedoBufIdx", UndoRedoBufIdx);
         
         while (UndoRedoBufSize > UndoRedoBufIdx)
         {
-            if (DataExists("UndoRedoBuf_" + UndoRedoBufSize))
+            if (DataExists(LSPrefix + "UndoRedoBuf_" + UndoRedoBufSize))
             {
-                DataDelete("UndoRedoBuf_" + UndoRedoBufSize);
+                DataDelete(LSPrefix + "UndoRedoBuf_" + UndoRedoBufSize);
             }
             UndoRedoBufSize--;
         }
 
         UndoRedoBufSize = UndoRedoBufIdx;
-        DataSet("UndoRedoBufSize", UndoRedoBufSize);
+        DataSet(LSPrefix + "UndoRedoBufSize", UndoRedoBufSize);
     }
 
     UndoRedoUnit = false;
