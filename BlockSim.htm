@@ -2,6 +2,7 @@
 <html>
  <head>
   <title>BlockSim</title><meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <style>
    *
    {
@@ -273,12 +274,22 @@
 
    <table id="T5" width="100%" border="1" cellpadding="0" cellspacing="0">
     <tr>
+     <td width="20%" align="center" valign="center"><input type="button" id="ZoomO2" value="Fast tele" onClick="Zoom(-10)" class="ctrl"></td>
+     <td width="20%" align="center" valign="center"><input type="button" id="ZoomO1" value="Slow tele" onClick="Zoom(-1)" class="ctrl"></td>
+     <td width="20%" align="center" valign="center"><input type="button" id="Zoom00" value="X" onClick="Zoom(0)" class="ctrl"></td>
+     <td width="20%" align="center" valign="center"><input type="button" id="ZoomI1" value="Slow wide" onClick="Zoom(1)" class="ctrl"></td>
+     <td width="20%" align="center" valign="center"><input type="button" id="ZoomI2" value="Fast wide" onClick="Zoom(10)" class="ctrl"></td>
+    </tr>
+   </table>
+
+   <table id="T6" width="100%" border="1" cellpadding="0" cellspacing="0">
+    <tr>
      <td width="50%" align="center" valign="center"><input type="button" id="UndoRedo0" value="Undo" onClick="UndoRedo0()" class="ctrl"></td>
      <td width="50%" align="center" valign="center"><input type="button" id="UndoRedo1" value="Redo" onClick="UndoRedo1()" class="ctrl"></td>
     </tr>
    </table>
 
-   <table id="T6" width="100%" border="1" cellpadding="0" cellspacing="0">
+   <table id="T7" width="100%" border="1" cellpadding="0" cellspacing="0">
     <tr>
      <td colspan="4" align="center" valign="center">
       <input type="Text" value="" class="ctrl" id="StorageName">
@@ -305,7 +316,7 @@
     </tr>
    </table>
 
-   <table id="T7" width="100%" border="1" cellpadding="0" cellspacing="0">
+   <table id="T8" width="100%" border="1" cellpadding="0" cellspacing="0">
     <tr>
      <td width="20%" align="center" valign="center">
       <input type="Button" id="Text1" value="Sparse" class="ctrl" onclick="TextExport(1);"/>
@@ -313,7 +324,7 @@
      <td width="20%" align="center" valign="center">
       <input type="Button" id="Text2" value="Dense" class="ctrl" onclick="TextExport(2);"/>
      </td>
-     <td width="20%" align="center" valign="center">
+     <td width="20%" align="center" valign="center" colspan="2">
       <input type="Button" id="Text0" value="Object" class="ctrl" onclick="TextExport(0);"/>
      </td>
      <td width="20%" align="center" valign="center">
@@ -325,8 +336,16 @@
     </tr>
     <tr>
      <td colspan="6" align="center" valign="center">
-      <textarea id="TextBuffer" wrap="off" rows="10" class="ctrl" style="resize:none;white-space:pre;overflow:auto;"></textarea>
+      <textarea id="TextBuffer" wrap="off" rows="10" class="ctrl" style="resize:none;white-space:pre;overflow:auto;" onchange="RetentionText()"></textarea>
       <br/>
+     </td>
+    </tr>
+    <tr>
+     <td width="50%" colspan="3" align="center" valign="center">
+      <input type="Button" id="TextC" value="Copy" class="ctrl" onclick="TextCopy();"/>
+     </td>
+     <td width="50%" colspan="3" align="center" valign="center">
+      <input type="Button" id="TextV" value="Paste" class="ctrl" onclick="TextPaste();"/>
      </td>
     </tr>
    </table>
@@ -364,7 +383,7 @@
     <td><input type="textbox" id="SET_Control1Size" class="ctrl" onchange="SettingsSet()"></td>
    </tr>
    <tr>
-    <td>Font size:</td>
+    <td>Button font size:</td>
     <td><input type="textbox" id="SET_Control2Size" class="ctrl" onchange="SettingsSet()"></td>
    </tr>
    <tr>
@@ -417,6 +436,7 @@
   <script src="BlockSimText.js"></script>
   <script src="BlockSimClipboard.js"></script>
   <script src="BlockSimUndoRedo.js"></script>
+  <script src="BlockSimRetention.js"></script>
   <script src="BlockSimInit.js"></script>
  </body>
 </html>

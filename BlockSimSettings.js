@@ -425,6 +425,7 @@ function GuiSetControls()
     document.getElementById("Storage3").style["font-size"] = SET_Control2Size + "px";
     document.getElementById("Storage4").style["font-size"] = SET_Control2Size + "px";
 
+    document.getElementById("StorageName").style["height"] = SET_Control1Size + "px";
     document.getElementById("Storage1").style["height"] = SET_Control1Size + "px";
     document.getElementById("Storage2").style["height"] = SET_Control1Size + "px";
     document.getElementById("Storage3").style["height"] = SET_Control1Size + "px";
@@ -432,12 +433,16 @@ function GuiSetControls()
 
 
     document.getElementById("TextX").style["font-size"] = SET_Control2Size + "px";
+    document.getElementById("TextC").style["font-size"] = SET_Control2Size + "px";
+    document.getElementById("TextV").style["font-size"] = SET_Control2Size + "px";
     document.getElementById("Text_").style["font-size"] = SET_Control2Size + "px";
     document.getElementById("Text0").style["font-size"] = SET_Control2Size + "px";
     document.getElementById("Text1").style["font-size"] = SET_Control2Size + "px";
     document.getElementById("Text2").style["font-size"] = SET_Control2Size + "px";
 
     document.getElementById("TextX").style["height"] = SET_Control1Size + "px";
+    document.getElementById("TextC").style["height"] = SET_Control1Size + "px";
+    document.getElementById("TextV").style["height"] = SET_Control1Size + "px";
     document.getElementById("Text_").style["height"] = SET_Control1Size + "px";
     document.getElementById("Text0").style["height"] = SET_Control1Size + "px";
     document.getElementById("Text1").style["height"] = SET_Control1Size + "px";
@@ -449,9 +454,19 @@ function GuiSetControls()
 
     document.getElementById("UndoRedo0").style["height"] = SET_Control1Size + "px";
     document.getElementById("UndoRedo1").style["height"] = SET_Control1Size + "px";
-    
 
-    //HtmlSetVisible("CtrlBtn02", (CtrlVisMode != 0));
+
+    document.getElementById("ZoomO2").style["font-size"] = SET_Control2Size + "px";
+    document.getElementById("ZoomO1").style["font-size"] = SET_Control2Size + "px";
+    document.getElementById("Zoom00").style["font-size"] = SET_Control2Size + "px";
+    document.getElementById("ZoomI1").style["font-size"] = SET_Control2Size + "px";
+    document.getElementById("ZoomI2").style["font-size"] = SET_Control2Size + "px";
+
+    document.getElementById("ZoomO2").style["height"] = SET_Control1Size + "px";
+    document.getElementById("ZoomO1").style["height"] = SET_Control1Size + "px";
+    document.getElementById("Zoom00").style["height"] = SET_Control1Size + "px";
+    document.getElementById("ZoomI1").style["height"] = SET_Control1Size + "px";
+    document.getElementById("ZoomI2").style["height"] = SET_Control1Size + "px";
 
     
     for (let I = 0; I < 3; I++)

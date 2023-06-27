@@ -1,16 +1,76 @@
-let UndoRedoBuf = [];
 let UndoRedoBufIdx = 0;
 let UndoRedoBufSize = 0;
 
 let UndoRedoUnit = false;
 let UndoRedoUnitTemp = false;
 
+let UndoRedoTempBufIdx = "0";
+let UndoRedoTempBufSize = "0";
+let UndoRedoTempBuf = {};
+
+function UndoRedoToTemp()
+{
+    if (DataExists("UndoRedoBufIdx"))
+    {
+        UndoRedoTempBufIdx = DataGetI("UndoRedoBufIdx");
+    }
+    else
+    {
+        UndoRedoTempBufIdx = 0;
+    }
+    if (DataExists("UndoRedoBufSize"))
+    {
+        UndoRedoTempBufSize = DataGetI("UndoRedoBufSize");
+    }
+    else
+    {
+        UndoRedoTempBufSize = 0;
+    }
+    UndoRedoTempBuf = {};
+    
+    for (let I = 0; I < UndoRedoTempBufSize; I++)
+    {
+        if (DataExists("UndoRedoBuf_" + UndoRedoBufSize))
+        {
+            UndoRedoTempBuf[I] = DataGet("UndoRedoBuf_" + I);
+        }
+    }
+}
+
+function UndoRedoFromTemp()
+{
+    UndoRedoClear();
+
+    DataSet("UndoRedoBufIdx", UndoRedoTempBufIdx);
+    DataSet("UndoRedoBufSize", UndoRedoTempBufSize);
+
+    for (let I = 0; I < UndoRedoTempBufSize; I++)
+    {
+        if (I in UndoRedoTempBuf)
+        {
+            DataSet("UndoRedoBuf_" + I, UndoRedoTempBuf[I]);
+        }
+    }
+    
+    UndoRedoBufIdx = UndoRedoTempBufIdx;
+    UndoRedoBufSize = UndoRedoTempBufSize;
+}
+
 function UndoRedoClear()
 {
-    UndoRedoBuf = [];
     UndoRedoBufIdx = 0;
-    UndoRedoBufSize = 0;
     UndoRedoUnit = false;
+    DataSet("UndoRedoBufIdx", UndoRedoBufIdx);
+
+    while (UndoRedoBufSize > 0)
+    {
+        UndoRedoBufSize--;
+        if (DataExists("UndoRedoBuf_" + UndoRedoBufSize))
+        {
+            DataDelete("UndoRedoBuf_" + UndoRedoBufSize);
+        }
+    }
+    DataSet("UndoRedoBufSize", UndoRedoBufSize);
 }
 
 function UndoRedo0()
@@ -21,31 +81,37 @@ function UndoRedo0()
     }
 
     UndoRedoBufIdx--;
-        
-    for (let I = UndoRedoBuf[UndoRedoBufIdx].ScreenList.length - 1; I >= 0; I--)
+    DataSet("UndoRedoBufIdx", UndoRedoBufIdx);
+
+    if (DataExists("UndoRedoBuf_" + UndoRedoBufIdx))
     {
-        let X = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].X;
-        let Y = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Y;
-        let Z = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Z;
-        if (UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Move)
+        let UndoRedoBufEntry = JSON.parse(DataGet("UndoRedoBuf_" + UndoRedoBufIdx));
+        for (let I = UndoRedoBufEntry.ScreenList.length - 1; I >= 0; I--)
         {
-            let DX = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].DX;
-            let DY = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].DY;
-            let DZ = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].DZ;
-            UndoRedoMove(X + DX, Y + DY, Z + DZ, 0 - DX, 0 - DY, 0 - DZ);
+            let X = UndoRedoBufEntry.ScreenList[I].X;
+            let Y = UndoRedoBufEntry.ScreenList[I].Y;
+            let Z = UndoRedoBufEntry.ScreenList[I].Z;
+            if (UndoRedoBufEntry.ScreenList[I].Move)
+            {
+                let DX = UndoRedoBufEntry.ScreenList[I].DX;
+                let DY = UndoRedoBufEntry.ScreenList[I].DY;
+                let DZ = UndoRedoBufEntry.ScreenList[I].DZ;
+                UndoRedoMove(X + DX, Y + DY, Z + DZ, 0 - DX, 0 - DY, 0 - DZ);
+            }
+            else
+            {
+                UndoRedo(X, Y, Z, UndoRedoBufEntry.ScreenList[I].Step2, UndoRedoBufEntry.ScreenList[I].Step1);
+            }
         }
-        else
-        {
-            UndoRedo(X, Y, Z, UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Step2, UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Step1);
-        }
+
+        CursorX = UndoRedoBufEntry.CursorX_1;
+        CursorY = UndoRedoBufEntry.CursorY_1;
+        CursorZ = UndoRedoBufEntry.CursorZ_1;
+        CursorSizeX = UndoRedoBufEntry.CursorSizeX_1;
+        CursorSizeY = UndoRedoBufEntry.CursorSizeY_1;
+        CursorSizeZ = UndoRedoBufEntry.CursorSizeZ_1;
     }
 
-    CursorX = UndoRedoBuf[UndoRedoBufIdx].CursorX_1;
-    CursorY = UndoRedoBuf[UndoRedoBufIdx].CursorY_1;
-    CursorZ = UndoRedoBuf[UndoRedoBufIdx].CursorZ_1;
-    CursorSizeX = UndoRedoBuf[UndoRedoBufIdx].CursorSizeX_1;
-    CursorSizeY = UndoRedoBuf[UndoRedoBufIdx].CursorSizeY_1;
-    CursorSizeZ = UndoRedoBuf[UndoRedoBufIdx].CursorSizeZ_1;
     BufScreenRepaint();
 }
 
@@ -55,34 +121,40 @@ function UndoRedo1()
     {
         return;
     }
+
+    if (DataExists("UndoRedoBuf_" + UndoRedoBufIdx))
+    {        
+        let UndoRedoBufEntry = JSON.parse(DataGet("UndoRedoBuf_" + UndoRedoBufIdx));
+        for (let I = 0; I < UndoRedoBufEntry.ScreenList.length; I++)
+        {
+            let X = UndoRedoBufEntry.ScreenList[I].X;
+            let Y = UndoRedoBufEntry.ScreenList[I].Y;
+            let Z = UndoRedoBufEntry.ScreenList[I].Z;
+            if (UndoRedoBufEntry.ScreenList[I].Move)
+            {
+                let DX = UndoRedoBufEntry.ScreenList[I].DX;
+                let DY = UndoRedoBufEntry.ScreenList[I].DY;
+                let DZ = UndoRedoBufEntry.ScreenList[I].DZ;
+                UndoRedoMove(X, Y, Z, DX, DY, DZ);
+            }
+            else
+            {
+                UndoRedo(X, Y, Z, UndoRedoBufEntry.ScreenList[I].Step1, UndoRedoBufEntry.ScreenList[I].Step2);
+            }
+        }
         
-    for (let I = 0; I < UndoRedoBuf[UndoRedoBufIdx].ScreenList.length; I++)
-    {
-        let X = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].X;
-        let Y = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Y;
-        let Z = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Z;
-        if (UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Move)
-        {
-            let DX = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].DX;
-            let DY = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].DY;
-            let DZ = UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].DZ;
-            UndoRedoMove(X, Y, Z, DX, DY, DZ);
-        }
-        else
-        {
-            UndoRedo(X, Y, Z, UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Step1, UndoRedoBuf[UndoRedoBufIdx].ScreenList[I].Step2);
-        }
+        CursorX = UndoRedoBufEntry.CursorX_2;
+        CursorY = UndoRedoBufEntry.CursorY_2;
+        CursorZ = UndoRedoBufEntry.CursorZ_2;
+        CursorSizeX = UndoRedoBufEntry.CursorSizeX_2;
+        CursorSizeY = UndoRedoBufEntry.CursorSizeY_2;
+        CursorSizeZ = UndoRedoBufEntry.CursorSizeZ_2;
     }
     
-    CursorX = UndoRedoBuf[UndoRedoBufIdx].CursorX_2;
-    CursorY = UndoRedoBuf[UndoRedoBufIdx].CursorY_2;
-    CursorZ = UndoRedoBuf[UndoRedoBufIdx].CursorZ_2;
-    CursorSizeX = UndoRedoBuf[UndoRedoBufIdx].CursorSizeX_2;
-    CursorSizeY = UndoRedoBuf[UndoRedoBufIdx].CursorSizeY_2;
-    CursorSizeZ = UndoRedoBuf[UndoRedoBufIdx].CursorSizeZ_2;
     BufScreenRepaint();
 
     UndoRedoBufIdx++;
+    DataSet("UndoRedoBufIdx", UndoRedoBufIdx);
 }
 
 function UndoRedo(X, Y, Z, Src, Dst)
@@ -92,6 +164,7 @@ function UndoRedo(X, Y, Z, Src, Dst)
         let Obj = SceneAdd(X, Y, Z);
         Obj.SetColor(Dst.Color1R, Dst.Color1G, Dst.Color1B, Dst.Color2R, Dst.Color2G, Dst.Color2B);
         Obj.SetFaces(Dst.Face0, Dst.Face1, Dst.Face2, Dst.Face3, Dst.Face4, Dst.Face5);
+        RetentionAddObj(Obj);
     }
     else
     {
@@ -128,9 +201,22 @@ function UndoRedoUnitEnd()
 
     if (UndoRedoUnit.ScreenList.length > 0)
     {
-        UndoRedoBuf[UndoRedoBufIdx] = UndoRedoUnit;
+        DataSet("UndoRedoBuf_" + UndoRedoBufIdx, JSON.stringify(UndoRedoUnit));
+
         UndoRedoBufIdx++;
+        DataSet("UndoRedoBufIdx", UndoRedoBufIdx);
+        
+        while (UndoRedoBufSize > UndoRedoBufIdx)
+        {
+            if (DataExists("UndoRedoBuf_" + UndoRedoBufSize))
+            {
+                DataDelete("UndoRedoBuf_" + UndoRedoBufSize);
+            }
+            UndoRedoBufSize--;
+        }
+
         UndoRedoBufSize = UndoRedoBufIdx;
+        DataSet("UndoRedoBufSize", UndoRedoBufSize);
     }
 
     UndoRedoUnit = false;

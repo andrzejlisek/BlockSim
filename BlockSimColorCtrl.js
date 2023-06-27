@@ -53,6 +53,7 @@ function GuiSet()
 
     ViewRenderer.setClearColor(ColorNum[ColorBackR] * 65536 + ColorNum[ColorBackG] * 256 + ColorNum[ColorBackB], 1);
     CameraPosAng();
+    RetentionCamCur();
     Cursor.Repaint();
 }
 
@@ -101,6 +102,7 @@ function ColorSet()
                 UndoRedoUnitBlock1Obj(Obj);
                 Obj.SetColor(Color1R, Color1G, Color1B, Color2R, Color2G, Color2B);
                 Obj.Repaint();
+                RetentionAddObj(Obj);
                 UndoRedoUnitBlock2Obj(Obj);
             }
         }
@@ -111,6 +113,7 @@ function ColorSet()
     ColorDef2R = Color2R;
     ColorDef2G = Color2G;
     ColorDef2B = Color2B;
+    RetentionCamCur();
 }
 
 function ColorSetDef()
@@ -121,6 +124,7 @@ function ColorSetDef()
     ColorDef2R = NumF(document.getElementById("Color2R").value);
     ColorDef2G = NumF(document.getElementById("Color2G").value);
     ColorDef2B = NumF(document.getElementById("Color2B").value);
+    RetentionCamCur();
 }
 
 function ColorCtrlDisp(Num)

@@ -1,6 +1,6 @@
 var SET_Layout_Split = 0;
 var SET_Layout_L = "";
-var SET_Layout_R = "01234567";
+var SET_Layout_R = "012345678";
 var SET_LayoutCtrl = 0;
 var SET_LayoutCtrlPos = 0;
 var SET_LayoutBtn = 0;
@@ -19,6 +19,8 @@ var SET_KeyRepeat1 = true;
 var SET_KeyRepeat2 = true;
 var SET_KeyRepeat3 = true;
 var SET_KeyRepeat4 = true;
+
+var SET_KeybStateCursor = false;
 
 if (DataExists("SET_Layout_L")) { SET_Layout_L = DataGet("SET_Layout_L"); }
 if (DataExists("SET_Layout_R")) { SET_Layout_R = DataGet("SET_Layout_R"); }
@@ -41,6 +43,8 @@ if (DataExists("SET_KeyRepeat1")) { SET_KeyRepeat1 = ((DataGetI("SET_KeyRepeat1"
 if (DataExists("SET_KeyRepeat2")) { SET_KeyRepeat2 = ((DataGetI("SET_KeyRepeat2") > 0) ? true : false); }
 if (DataExists("SET_KeyRepeat3")) { SET_KeyRepeat3 = ((DataGetI("SET_KeyRepeat3") > 0) ? true : false); }
 if (DataExists("SET_KeyRepeat4")) { SET_KeyRepeat4 = ((DataGetI("SET_KeyRepeat4") > 0) ? true : false); }
+
+if (DataExists("SET_KeybStateCursor")) { SET_KeybStateCursor = ((DataGetI("SET_KeybStateCursor") > 0) ? true : false); }
 
 
 var RenderUpd = true;

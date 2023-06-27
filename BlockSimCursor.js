@@ -767,6 +767,7 @@ function CursorMove(DX, DY, DZ)
                             }
                         }
                         UndoRedoUnitBlock2Obj(Obj1);
+                        RetentionAddObj(Obj1);
                     }
                 }
             }
@@ -784,9 +785,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(0, false);
                             UndoRedoUnitBlock2Obj(Obj1);
+                            RetentionAddObj(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(1, false);
                             UndoRedoUnitBlock2Obj(Obj2);
+                            RetentionAddObj(Obj2);
                         }
                     }
 
@@ -799,9 +802,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(1, false);
                             UndoRedoUnitBlock2Obj(Obj1);
+                            RetentionAddObj(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(0, false);
                             UndoRedoUnitBlock2Obj(Obj2);
+                            RetentionAddObj(Obj2);
                         }
                     }
                 }
@@ -820,9 +825,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(5, false);
                             UndoRedoUnitBlock2Obj(Obj1);
+                            RetentionAddObj(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(4, false);
                             UndoRedoUnitBlock2Obj(Obj2);
+                            RetentionAddObj(Obj2);
                         }
                     }
 
@@ -835,9 +842,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(4, false);
                             UndoRedoUnitBlock2Obj(Obj1);
+                            RetentionAddObj(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(5, false);
                             UndoRedoUnitBlock2Obj(Obj2);
+                            RetentionAddObj(Obj2);
                         }
                     }
                 }
@@ -856,9 +865,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(3, false);
                             UndoRedoUnitBlock2Obj(Obj1);
+                            RetentionAddObj(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(2, false);
                             UndoRedoUnitBlock2Obj(Obj2);
+                            RetentionAddObj(Obj2);
                         }
                     }
 
@@ -871,9 +882,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(2, false);
                             UndoRedoUnitBlock2Obj(Obj1);
+                            RetentionAddObj(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(3, false);
                             UndoRedoUnitBlock2Obj(Obj2);
+                            RetentionAddObj(Obj2);
                         }
                     }
                 }
@@ -908,6 +921,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(1, true);
                         UndoRedoUnitBlock2Obj(Obj2);
+                        RetentionAddObj(Obj2);
                     }
 
                     Obj2 = SceneGet(CursorX + CursorSizeX_2 + 1, CursorY + I_Y, CursorZ + I_Z);
@@ -916,6 +930,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(0, true);
                         UndoRedoUnitBlock2Obj(Obj2);
+                        RetentionAddObj(Obj2);
                     }
                 }
             }
@@ -950,6 +965,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(4, true);
                         UndoRedoUnitBlock2Obj(Obj2);
+                        RetentionAddObj(Obj2);
                     }
 
                     Obj2 = SceneGet(CursorX + I_X, CursorY + CursorSizeY_2 + 1, CursorZ + I_Z);
@@ -958,6 +974,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(5, true);
                         UndoRedoUnitBlock2Obj(Obj2);
+                        RetentionAddObj(Obj2);
                     }
                 }
             }
@@ -992,6 +1009,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(2, true);
                         UndoRedoUnitBlock2Obj(Obj2);
+                        RetentionAddObj(Obj2);
                     }
 
                     Obj2 = SceneGet(CursorX + I_X, CursorY + I_Y, CursorZ + CursorSizeZ_2 + 1);
@@ -1000,6 +1018,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(3, true);
                         UndoRedoUnitBlock2Obj(Obj2);
+                        RetentionAddObj(Obj2);
                     }
                 }
             }
@@ -1039,6 +1058,7 @@ function CursorMove(DX, DY, DZ)
     }
     
     UndoRedoUnitEnd();
+    RetentionCamCur();
 }
 
 function CursorCalcBounds()
@@ -1065,5 +1085,6 @@ function CursorSize(DX, DY, DZ)
     Cursor.SetPosition(CursorX, CursorY, CursorZ);
 
     CursorShow();
+    RetentionCamCur();
 }
 

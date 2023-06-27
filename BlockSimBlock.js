@@ -222,6 +222,24 @@ function BlockObject()
         this.Color__ = this.Color1_ * 125 + this.Color2_;
     }
 
+    this.GetInfo = function()
+    {
+        return { PX : this.PosX, PY : this.PosY, PZ : this.PosZ,
+         F0 : this.Face0,
+         F1 : this.Face1,
+         F2 : this.Face2,
+         F3 : this.Face3,
+         F4 : this.Face4,
+         F5 : this.Face5,
+         C1R : this.Color1R,
+         C1G : this.Color1G,
+         C1B : this.Color1B,
+         C2R : this.Color2R,
+         C2G : this.Color2G,
+         C2B : this.Color2B
+        };
+    }
+
     this.Repaint = function()
     {
         var _N, _S, _E, _W, _NE, _NW, _SE, _SW, _NE_, _NW_, _SE_, _SW_;

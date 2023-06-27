@@ -84,13 +84,26 @@ For each color kind and color channel there are five buttons, which allows to ch
 
 For each color kind and color channel there are two buttons\. The value on noth buttons indicated the current channel value\. The left button decreases the value and the right button increases the value\.
 
+## CameraAngle
+
+This module allows to change the camera view angle\. Its consists of 5 buttons:
+
+
+* **Fast tele** \- Decrease angle by 10 degrees\.
+* **Slow tele** \- Decrease angle by 1 degree\.
+* **Angle value** \- Show current angle value and set arbitrary angle\.
+* **Slow wide** \- Increase angle by 1 degree\.
+* **Fast wide** \- Increase angle by 12 degree\.
+
+The camera view angle can be between 1 \(extremely tele\) and 179 \(extremely wide\)\.
+
 ## UndoRedo
 
 This module allows to undo or redo any action, which changes the object\. Its consists of two buttons only:
 
 
-* **Undo**
-* **Redo**
+* **Undo** \- Undo last scene changes\.
+* **Redo** \- Redo undone scene changes\.
 
 ## Storage
 
@@ -131,6 +144,12 @@ These buttons has the following actions:
 * **View** \- Generate text describing current camera view only\.
 * **Retrieve** \- Aquire the text from field and read as scene/object/view depending on text description\.
 
+Below the text field, there are two additional buttons:
+
+
+* **Copy** \- Copy text from field to clipboard\.
+* **Paste** \- Paste text from clipboard to field\. Thic action may not work on some operating systems and browsers or may require additional acceptation in browser\.
+
 ### Saving
 
 For save scene/object/view, click one of the buthons other than **Retrieve**\. The text description will be written in the field\. Copy and save the text\.
@@ -139,13 +158,66 @@ For save scene/object/view, click one of the buthons other than **Retrieve**\. T
 
 For retrieve item, paste the text description into the field and click the **Retrieve** button\. The item kind \(scene, object, view\) will be recognized automatically\.
 
+# Keyboard
+
+You can use your keyboard for some actions\. Before it, you have to click the **Screen**, the keyboard capture will be enabled and the fact will be indicated as brackets around set names in the **Control** module\. For disable keyboard capture, click any button in **Control** module\.
+
+The **BlockSim** is optimized for standard QWERTY keyboard and you can use the following keys:
+
+
+* **W**, **S**, **A**, **D**, **Q**, **E** \- Move camera\.
+* **I**, **K**, **J**, **L**, **U**, **O** \- Rotate camera\.
+* **T**, **G**, **F**, **H**, **R**, **Y** \- Move or resize cursor \(switched by **N** and **M** keys\)\.
+* **N** \- Switch to cursor move using **T**, **G**, **F**, **H**, **R**, **Y** keys\.
+* **M** \- Switch to cursor resize using **T**, **G**, **F**, **H**, **R**, **Y** keys\.
+* **\-\_** \- Decrease camera view angle \(tele\)\.
+* **=\+** \- Increase camera view angle \(wide\)\.
+* **\[\{** \- Undo\.
+* **\]\}** \- Redo\.
+* **1**, **2**, **3**, **4**, **5**, **6** \- Select one of the six cursor states\.
+* **Z** \- Delete\.
+* **X** \- Cut\.
+* **C** \- Copy\.
+* **V** \- Paste\.
+
+# Refresh and retention
+
+BlockSim preserves the current state \(current scene, cursor position and size, undo/redo buffer etc\.\) after closing\. For reset application, refresh it three times without any action such as cursor movement or adding/erasing blocks\. This feature avoids from lose of unsaved work if you accidentally close web browser or refresh application\.
+
 # Settings
 
-XXX
+Below the application interface, there is the form of settings with following meaning:
+
+
+* **Canvas width** \- Canvas width in **Screen** module\.
+* **Canvas height** \- Canvas height in **Screen** module\.
+* **Text field size** \- Number of lines in text field in **Text** module\.
+* **Text font size** \- Font size of text field in **Text** module\.
+* **Control button size** \- Height of buttons with names and coordinates in **Control** module\.
+* **Other button size** \- Height of all buttons other than mentioned above\.
+* **Button font size** \- Font size of all buttons\.
+* **Control repeat time** \- Time in milliseconds between repeated action in continuous state for every arrow in **Control** module\.
+* **Arrow layout** \- Select one of two layouts with several variants differing the space size in **Control** module:
+  * **Four X** \- All four control sets, recommended in most cases\.
+  * **Two X** \- Display two control sets at once\. Between control sets, there are **\#** buttons, which switch between visible control sets\. Usable in very narrow screen like vertically holded smartphone\.
+* **Color layout** \- Select one of two color button layouts in **Color** module:
+  * **Buttons** \- Display all five buttons per every color channel, which sets the color value\. Recommended in most cases\.
+  * **Inc/dec** \- Display only two buttons per every color channel, which increments or decrements the current color value\. Usable, when the **Buttons** layout creates too small buttons\.
+* **Arrangement** \- Enable or disable interface arrangement possibility\.
+
+Every setting takes effect immediatelly\.
 
 # Interface arrangement
 
-XXX
+While **Arrangement** setting is enabled, there are additional button outside the modules\. You can reorder the modules or split the interface into two columns\.
+
+At the most top of screen, there are the buttons with horizontal arrow with vertical bar\. The buttons moves the column split line\.
+
+Below the mentioned split button, there are button with horizontal arrow\. The button moves the top most module into the other column\. For example, the left arrow button in the right column moves the first module into the left column\.
+
+Between modules, there are buttons with vertical up\-down arrow\. This button swaps the two modules around this button\.
+
+For choose the emodule to move from the column to ther column, use the swap buttons to move the module into the top most position\. After this, you can move the module using the horizontal arrow button\.
 
 
 

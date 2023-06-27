@@ -1,7 +1,3 @@
-function ClickSetBtn(BtnId)
-{
-}
-
 function ClickPrepare(Node, D)
 {
     if (Node instanceof HTMLInputElement)
@@ -38,14 +34,5 @@ function ClickPrepare(Node, D)
             ClickPrepare(Node.childNodes[I], D + 1);
         }
     }
-
-
-    //for (let Node_ = Node.firstChild; Node_!==null; Node_ = Node.nextSibling)
-    //{
-    //    console.log(">>" + Node_);
-    //    ClickPrepare(Node_);
-    //}
 }
 
-
-//ClickSetBtn();

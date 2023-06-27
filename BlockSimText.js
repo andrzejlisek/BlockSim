@@ -1,11 +1,43 @@
 function TextExport(Mode)
 {
     document.getElementById("TextBuffer").value = BufExport(Mode);
+    RetentionText();
 }
 
 function TextImport()
 {
     BufImport(document.getElementById("TextBuffer").value);
+}
+
+function TextCopy()
+{
+    if (navigator.clipboard.writeText)
+    {
+        navigator.clipboard.writeText(document.getElementById("TextBuffer").value);
+    }
+    else
+    {
+        alert("Copy to clipboard is not possible in this browser.");
+    }
+}
+
+function TextPaste_(X)
+{
+    document.getElementById("TextBuffer").value = X;
+    RetentionText();
+}
+
+
+function TextPaste()
+{
+    if (navigator.clipboard.readText)
+    {
+        navigator.clipboard.readText().then(clipText => TextPaste_(clipText)).catch(error => alert("Paste error: " + error));
+    }
+    else
+    {
+        alert("Paste from clipboard is not possible in this browser.");
+    }
 }
 
 function BufExport(Mode)
@@ -177,7 +209,7 @@ function BufImport(Buf_)
     
     if (Buf.length < BufDataIdx)
     {
-        ImportSuccess;
+        ImportSuccess = false;
     }
     let Mode = 0;
 
@@ -295,7 +327,7 @@ function BufImport(Buf_)
             for (var I = BufDataIdx; I < Buf.length; I++)
             {
                 BufX = Buf[I].split("|");
-                if (BufX.length > 5)
+                if (BufX.length > 6)
                 {
                     if (SceneExists(NumI(BufX[0]) + CursorX__, NumI(BufX[1]) + CursorY__, NumI(BufX[2]) + CursorZ__))
                     {
@@ -308,7 +340,7 @@ function BufImport(Buf_)
                 for (var I = BufDataIdx; I < Buf.length; I++)
                 {
                     BufX = Buf[I].split("|");
-                    if (BufX.length > 5)
+                    if (BufX.length > 6)
                     {
                         let IdxX = NumI(BufX[0]) + CursorX__;
                         let IdxY = NumI(BufX[1]) + CursorY__;
@@ -370,7 +402,7 @@ function BufImport(Buf_)
             UndoRedoUnitEnd();
         }
     }
-
+    RetentionCamCur();
     
     if (Mode == 0)
     {
@@ -396,6 +428,8 @@ function BufScreenRepaint()
     GuiSet();
     CursorShow();
     SceneRepaintWhole(true);
+    
+    RetentionCamCur();
 }
 
 var BufImportColorR;
@@ -416,6 +450,7 @@ function BufImportSetColorFaces(Obj, Color1, Color2, Faces)
     var F3 = Faces.substr(2, 1);
     Obj.SetColor(NumI(Color1.substr(0, 1)), NumI(Color1.substr(1, 1)), NumI(Color1.substr(2, 1)), NumI(Color2.substr(0, 1)), NumI(Color2.substr(1, 1)), NumI(Color2.substr(2, 1)));
     Obj.SetFaces((F2 == 1) || (F2 == 3), (F2 == 2) || (F2 == 3), (F1 == 1) || (F1 == 3), (F1 == 2) || (F1 == 3), (F3 == 1) || (F3 == 3), (F3 == 2) || (F3 == 3));
+    RetentionAddObj(Obj);
 }
 
 

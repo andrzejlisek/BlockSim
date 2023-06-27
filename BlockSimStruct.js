@@ -178,6 +178,7 @@ function SceneAddIdx(IdxX, IdxY, IdxZ, Obj)
     var Idx = Idx_(IdxX, IdxY, IdxZ);
     Obj.SetPosition(IdxX, IdxY, IdxZ);
     SceneStruct[Idx] = Obj;
+    RetentionAdd(Idx, Obj);
 }
 
 function SceneRemIdx(IdxX, IdxY, IdxZ)
@@ -188,6 +189,7 @@ function SceneRemIdx(IdxX, IdxY, IdxZ)
     }
     else
     {
+        RetentionRem(Idx);
         delete SceneStruct[Idx];
     }
 }
@@ -199,6 +201,7 @@ function SceneClear()
         SceneStruct[I].Remove();
     }
     SceneStruct = {};
+    RetentionClear();
 }
 
 function SceneAdd(IdxX, IdxY, IdxZ)
@@ -211,6 +214,7 @@ function SceneAdd(IdxX, IdxY, IdxZ)
         Obj.SetColor(ColorDef1R, ColorDef1G, ColorDef1B, ColorDef2R, ColorDef2G, ColorDef2B);
         Obj.SetPosition(IdxX, IdxY, IdxZ);
         SceneStruct[Idx] = Obj;
+        RetentionAdd(Idx, Obj);
         return Obj;
     }
     else
@@ -227,6 +231,7 @@ function SceneRem(IdxX, IdxY, IdxZ)
     }
     else
     {
+        RetentionRem(Idx);
         SceneStruct[Idx].Remove();
         delete SceneStruct[Idx];
     }
@@ -245,6 +250,10 @@ function SceneMove(IdxX, IdxY, IdxZ, DX, DY, DZ)
         {
             SceneStruct[Idx0] = SceneStruct[Idx];
             SceneStruct[Idx0].SetPosition(IdxX + DX, IdxY + DY, IdxZ + DZ);
+            
+            RetentionRem(Idx);
+            RetentionAdd(Idx0, SceneStruct[Idx0]);
+            
             delete SceneStruct[Idx];
         }
         //SceneStruct[Idx].Remove();
@@ -354,6 +363,7 @@ function SceneRotate(IdxX, IdxY, IdxZ, DX, DY, DZ)
         {
             SceneStruct[Idx].SetFaces(XFace5, XFace4, XFace2, XFace3, XFace0, XFace1);
         }
+        RetentionAdd(Idx, SceneStruct[Idx]);
     }
 }
 

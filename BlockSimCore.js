@@ -19,6 +19,7 @@ function CameraPosAngX(_X, _Y, _Z, __X, __Y, __Z)
     CameraRotY = __Y;
     CameraRotZ = __Z;
     CameraPosAng();
+    RetentionCamCur();
 }
 
 
@@ -110,6 +111,7 @@ function CameraPosChange(Axis, Dir)
         }
         I--;
     }
+    RetentionCamCur();
 }
 
 function CameraRotChange(Axis, Dir)
@@ -127,6 +129,7 @@ function CameraRotChange(Axis, Dir)
             CameraRotZ -= CameraRotStepX;
             break;
     }
+    RetentionCamCur();
 }
 
 
@@ -232,6 +235,7 @@ function CameraPosAngBtn(N)
             break;
     }
     CameraPosAng();
+    RetentionCamCur();
 }
 
 function CameraPosAng()
@@ -258,6 +262,7 @@ function CameraPosAng()
         CameraPosAngInfo("CtrlBtn3_", "Position", CursorX, CursorY, CursorZ);
         CameraPosAngInfo("CtrlBtn4_", "Size", CursorSizeX, CursorSizeY, CursorSizeZ);
     }
+    document.getElementById("Zoom00").value = CameraAngle;
 }
 
 

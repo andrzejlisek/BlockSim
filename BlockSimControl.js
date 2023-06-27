@@ -33,6 +33,7 @@ function KeyProc()
             case 46: CursorSize(0,  0, -1); break;
         }
         CameraPosAng();
+        RetentionCamCur();
         GuiGet();
         if ((SET_KeyRepeat1 && (KeyState >= 10) && (KeyState <= 19)))
         {
@@ -93,6 +94,31 @@ function ScrKeyUp(Arg)
     //MsgPrint(Arg1 + "__" + Arg2 + "  Up\n");
 }
 
+function Zoom(Val)
+{
+    if (Val > 0)
+    {
+        CameraAngle += Val;
+    }
+    if (Val < 0)
+    {
+        CameraAngle += Val;
+    }
+    if (Val == 0)
+    {
+        Val = prompt("Camera view angle", CameraAngle);
+        if (IsGoodNumber(Val))
+        {
+            CameraAngle = Val;
+        }
+    }
+    if (CameraAngle > 179) { CameraAngle = 179; }
+    if (CameraAngle < 1) { CameraAngle = 1; }
+    CameraPosAng();
+    RetentionCamCur();
+    GuiGet();
+}
+
 function KeyCapture(X)
 {
     if (SET_Keyboard != X)
@@ -100,6 +126,7 @@ function KeyCapture(X)
         SET_Keyboard = X;
         DataSet("SET_Keyboard", X ? "1" : "0");
         CameraPosAng();
+        RetentionCamCur();
     }
 }
 
@@ -109,75 +136,27 @@ function KeyPress(e)
     {
         return;
     }
-    console.log(e);
-//    alert(EditState);
-/*
-w-87
-s-83
-a-65
-d-68
 
-q-81
-e-69
-
-
-i-73
-k-75
-j-74
-l-76
-
-u-85
-o-79
-
-
-
-t-84    y--
-g-71    y++
-f-70    x--
-h-72    x++
-
-r-82    z++
-y-89    z--
-
-
-
-Z-90
-X-88
-C-67
-V-86
-B-66
-N-78
-
-M-77
-,-188
-.-190
-/-191
-
---173/109
-=-61/107
-
-
-1-49
-2-50
-3-51
-8-56
-9-57
-0-48
-*/
-//https://keycode.info/
-    //alert(e.keyCode);
+    //https://keycode.info/
+    //console.log(e.keyCode);
     switch(e.keyCode)
     {
-        case 173: // -_
-            if (CameraAngle < 179)
+        case 173: Zoom(-1); break; // -_
+        case 61:  Zoom( 1); break; // =+
+            
+        case 219: UndoRedo0(); break; // [{
+        case 221: UndoRedo1(); break; // ]}
+            
+        case 78: // N
             {
-                CameraAngle++;
+                SET_KeybStateCursor = false;
+                DataSet("SET_KeybStateCursor", SET_KeybStateCursor ? "1" : "0");
             }
             break;
-        case 61: // =+
-            if (CameraAngle > 1)
+        case 77: // M
             {
-                CameraAngle--;
+                SET_KeybStateCursor = true;
+                DataSet("SET_KeybStateCursor", SET_KeybStateCursor ? "1" : "0");
             }
             break;
 
@@ -195,12 +174,12 @@ M-77
         case 85: CameraRotChange(2,  1); break; // U
         case 79: CameraRotChange(2, -1); break; // O
 
-        case 84: CursorMove(0, -1,  0); break; // T
-        case 71: CursorMove(0,  1,  0); break; // G
-        case 70: CursorMove(-1, 0,  0); break; // F
-        case 72: CursorMove(1,  0,  0); break; // H
-        case 82: CursorMove(0,  0,  1); break; // R
-        case 89: CursorMove(0,  0, -1); break; // Y
+        case 84: if (SET_KeybStateCursor) { CursorSize(0, -1,  0); } else { CursorMove(0, -1,  0); } break; // T
+        case 71: if (SET_KeybStateCursor) { CursorSize(0,  1,  0); } else { CursorMove(0,  1,  0); } break; // G
+        case 70: if (SET_KeybStateCursor) { CursorSize(-1, 0,  0); } else { CursorMove(-1, 0,  0); } break; // F
+        case 72: if (SET_KeybStateCursor) { CursorSize(1,  0,  0); } else { CursorMove(1,  0,  0); } break; // H
+        case 82: if (SET_KeybStateCursor) { CursorSize(0,  0,  1); } else { CursorMove(0,  0,  1); } break; // R
+        case 89: if (SET_KeybStateCursor) { CursorSize(0,  0, -1); } else { CursorMove(0,  0, -1); } break; // Y
 
         case 49: CursorEditState(0); break; // 1
         case 50: CursorEditState(1); break; // 2
@@ -216,14 +195,15 @@ M-77
         case 101: CursorEditState(4); break; // Numpad 5
         case 102: CursorEditState(5); break; // Numpad 6
 
-        //case 90: ClipboardDelete(); break; // Z
-        //case 88: ClipboardCut(); break; // X
-        //case 67: ClipboardCopy(); break; // C
-        //case 86: ClipboardPaste(); break; // V
+        case 90: ClipboardDelete(); break; // Z
+        case 88: ClipboardCut(); break; // X
+        case 67: ClipboardCopy(); break; // C
+        case 86: ClipboardPaste(); break; // V
 
         default:
             return;
     }
     CameraPosAng();
+    RetentionCamCur();
     GuiGet();
 }

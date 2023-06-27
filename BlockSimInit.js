@@ -72,6 +72,7 @@ if (navigator.maxTouchPoints)
 GuiArrange();
 
 SettingsGet();
+UndoRedoToTemp();
 
 let Cursor = new CursorObject();
 let CursorVisible = true;
@@ -85,6 +86,8 @@ ColorGet();
 GuiGet();
 StorageList();
 UndoRedoClear();
+RetentionLoad();
+UndoRedoFromTemp()
 
 document.addEventListener("keydown", KeyPress, false);
 
