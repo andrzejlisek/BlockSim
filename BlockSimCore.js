@@ -281,6 +281,9 @@ var render = function ()
         ViewCamera.updateProjectionMatrix();
         CameraAngle_ = CameraAngle;
         RenderUpd = false;
+        
+        ViewCanvas.style["width"] = (SET_CanvasW / PixelRatio) + "px";
+        ViewCanvas.style["height"] = (SET_CanvasH / PixelRatio) + "px";
     }
     requestAnimationFrame(render);
     ViewRenderer.render(ViewScene, ViewCamera);

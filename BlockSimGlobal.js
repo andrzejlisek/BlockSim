@@ -1,5 +1,7 @@
 const LSPrefix = "BlockSim_";
 
+let PixelRatio = window.devicePixelRatio;
+
 var SET_Layout_Split = 0;
 var SET_Layout_L = "";
 var SET_Layout_R = "012345678";
