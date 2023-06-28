@@ -287,13 +287,12 @@ function BufImport(Buf_)
         }
 
 
+        BufX = Buf[6].split("|");
+        CursorSizeX = NumI(BufX[0]);
+        CursorSizeY = NumI(BufX[1]);
+        CursorSizeZ = NumI(BufX[2]);
         if (Mode > 0)
         {
-            BufX = Buf[6].split("|");
-            CursorSizeX = NumI(BufX[0]);
-            CursorSizeY = NumI(BufX[1]);
-            CursorSizeZ = NumI(BufX[2]);
-        
             BufX = Buf[7].split("|");
             BufImportColor(BufX[0]);
             ColorBackR = BufImportColorR;
@@ -406,8 +405,14 @@ function BufImport(Buf_)
     
     if (Mode == 0)
     {
+        CursorHide();
+        Cursor.SetSize(CursorSizeX, CursorSizeY, CursorSizeZ);
+        Cursor.SetPosition(CursorX, CursorY, CursorZ);
+        CursorCalcBounds();
+        CursorShow();
+
         SceneBlockList();
-        SceneBlockListRepaint();
+        SceneBlockListRepaintWithFlag();
     }
     else
     {

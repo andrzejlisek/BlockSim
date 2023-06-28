@@ -179,7 +179,7 @@ function RetentionLoad()
        
         for (let I = 0; I < RetentionDataCount; I++)
         {
-            let DataItemName = "RetentionData_" + I;
+            let DataItemName = LSPrefix + "RetentionData_" + I;
             if (DataExists(DataItemName))
             {
                 let ObjInfo = JSON.parse(DataGet(DataItemName));

@@ -88,6 +88,30 @@ function SceneBlockListRepaint()
     return false;
 }
 
+function SceneBlockListRepaintWithFlag()
+{
+    let ObjList = []
+    for (let I = 0; I < SceneBlockListX.length; I++)
+    {
+        let Obj = SceneGet(SceneBlockListX[I], SceneBlockListY[I], SceneBlockListZ[I]);
+        if (Obj)
+        {
+            Obj.ToRepaint = true;
+            ObjList.push(Obj);
+        }
+    }
+    for (let I = 0; I < ObjList.length; I++)
+    {
+        var Obj = ObjList[I];
+        if (Obj.ToRepaint)
+        {
+            SceneBlockListXYZ(Obj.PosX, Obj.PosY, Obj.PosZ, -1);
+            SceneBlockListRepaint();
+        }
+    }
+    return false;
+}
+
 function SceneBlockListSort(Mode)
 {
     for (var I = 0; I < SceneBlockListX.length; I++)

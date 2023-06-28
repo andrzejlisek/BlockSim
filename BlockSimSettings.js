@@ -531,10 +531,14 @@ function GuiSetCanvas()
 {
     ViewCanvas.width = SET_CanvasW;
     ViewCanvas.height = SET_CanvasH;
+    
     ViewRenderer.setClearColor(0x000000, 1);
     CameraPosAng();
     RenderUpd = true;
     render();
+
+    ViewCanvas.style["width"] = (SET_CanvasW / window.devicePixelRatio) + "px";
+    ViewCanvas.style["height"] = (SET_CanvasH / window.devicePixelRatio) + "px";
 }
 
 function SettingsGet()
@@ -565,6 +569,11 @@ function SettingsSet()
     SET_LayoutCtrl = document.getElementById("SET_LayoutCtrl").selectedIndex;
     SET_LayoutColor = document.getElementById("SET_LayoutColor").selectedIndex;
     SET_LayoutBtn = document.getElementById("SET_LayoutBtn").selectedIndex;
+
+    SET_CanvasW = Math.round(SET_CanvasW / window.devicePixelRatio);
+    SET_CanvasW = (SET_CanvasW * window.devicePixelRatio);
+    SET_CanvasH = Math.round(SET_CanvasH / window.devicePixelRatio);
+    SET_CanvasH = (SET_CanvasH * window.devicePixelRatio);
 
     DataSet(LSPrefix + "SET_CanvasW", SET_CanvasW);
     DataSet(LSPrefix + "SET_CanvasH", SET_CanvasH);
