@@ -1,3 +1,5 @@
+let ControlInterval = false;
+
 function KeyProc()
 {
     if (KeyState != 0)
@@ -35,22 +37,31 @@ function KeyProc()
         CameraPosAng();
         RetentionCamCur();
         GuiGet();
-        if ((SET_KeyRepeat1 && (KeyState >= 10) && (KeyState <= 19)))
+        
+        if (!ControlInterval)
         {
-            setTimeout(function(){ KeyProc(); }, SET_KeyTimer);
+            if ((SET_KeyRepeat1 && (KeyState >= 10) && (KeyState <= 19)))
+            {
+                ControlInterval = setInterval(function(){ KeyProc() }, SET_KeyTimer);
+            }
+            if ((SET_KeyRepeat2 && (KeyState >= 20) && (KeyState <= 29)))
+            {
+                ControlInterval = setInterval(function(){ KeyProc() }, SET_KeyTimer);
+            }
+            if ((SET_KeyRepeat3 && (KeyState >= 30) && (KeyState <= 39)))
+            {
+                ControlInterval = setInterval(function(){ KeyProc() }, SET_KeyTimer);
+            }
+            if ((SET_KeyRepeat4 && (KeyState >= 40) && (KeyState <= 49)))
+            {
+                ControlInterval = setInterval(function(){ KeyProc() }, SET_KeyTimer);
+            }
         }
-        if ((SET_KeyRepeat2 && (KeyState >= 20) && (KeyState <= 29)))
-        {
-            setTimeout(function(){ KeyProc(); }, SET_KeyTimer);
-        }
-        if ((SET_KeyRepeat3 && (KeyState >= 30) && (KeyState <= 39)))
-        {
-            setTimeout(function(){ KeyProc(); }, SET_KeyTimer);
-        }
-        if ((SET_KeyRepeat4 && (KeyState >= 40) && (KeyState <= 49)))
-        {
-            setTimeout(function(){ KeyProc(); }, SET_KeyTimer);
-        }
+    }
+    else
+    {
+        clearInterval(ControlInterval);
+        ControlInterval = false
     }
 }
 
@@ -109,7 +120,24 @@ function Zoom(Val)
         Val = prompt("Camera view angle", CameraAngle);
         if (IsGoodNumber(Val))
         {
-            CameraAngle = Val;
+            CameraAngle = NumI(Val);
+        }
+        
+        let ScaleX_ = prompt("Scale X", ScaleX);
+        if (IsGoodNumber(ScaleX_))
+        {
+            let ScaleY_ = prompt("Scale Y", ScaleY);
+            if (IsGoodNumber(ScaleY_))
+            {
+                let ScaleZ_ = prompt("Scale Z", ScaleZ);
+                if (IsGoodNumber(ScaleZ_))
+                {
+                    ScaleX_ = NumF(ScaleX_);
+                    ScaleY_ = NumF(ScaleY_);
+                    ScaleZ_ = NumF(ScaleZ_);
+                    ScaleSet(ScaleX_, ScaleY_, ScaleZ_);
+                }
+            }
         }
     }
     if (CameraAngle > 179) { CameraAngle = 179; }

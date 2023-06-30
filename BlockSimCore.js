@@ -263,12 +263,19 @@ function CameraPosAng()
         CameraPosAngInfo("CtrlBtn4_", "Size", CursorSizeX, CursorSizeY, CursorSizeZ);
     }
     document.getElementById("Zoom00").value = CameraAngle;
+    ScreenRefresh();
 }
 
 
 function Ang(X)
 {
     return X * 3.14159 / 180.0;
+}
+
+
+function ScreenRefresh()
+{
+    requestAnimationFrame(render);
 }
 
 var render = function ()
@@ -285,7 +292,6 @@ var render = function ()
         ViewCanvas.style["width"] = (SET_CanvasW / PixelRatio) + "px";
         ViewCanvas.style["height"] = (SET_CanvasH / PixelRatio) + "px";
     }
-    requestAnimationFrame(render);
     ViewRenderer.render(ViewScene, ViewCamera);
 };
 

@@ -1,11 +1,9 @@
-let ClipboardBuf_ = "";
-let ClipboardBuf = "";
-
-function ClipboardSwap()
+function ClipboardClear()
 {
-    let _ = ClipboardBuf;
-    ClipboardBuf = ClipboardBuf_;
-    ClipboardBuf_ = _;
+    if (DataExists(LSPrefix + "Clipboard"))
+    {
+        DataDelete(LSPrefix + "Clipboard");
+    }
 }
 
 function ClipboardCut()
@@ -16,17 +14,20 @@ function ClipboardCut()
 
 function ClipboardCopy()
 {
-    ClipboardBuf = BufExport(0);
+    DataSet(LSPrefix + "Clipboard", BufExport(-1));
 }
 
 function ClipboardPaste()
 {
-    return BufImport(ClipboardBuf);
+    if (DataExists(LSPrefix + "Clipboard"))
+    {
+        BufImport(DataGet(LSPrefix + "Clipboard"), 2);
+    }
 }
 
 function ClipboardDelete()
 {
-    SceneBlockList();
+    SceneBlockListCursor();
     UndoRedoUnitBegin();
     for (var I = 0; I < SceneBlockListX.length; I++)
     {
@@ -34,5 +35,7 @@ function ClipboardDelete()
         SceneRem(SceneBlockListX[I], SceneBlockListY[I], SceneBlockListZ[I]);
         UndoRedoUnitBlock2Blank(SceneBlockListX[I], SceneBlockListY[I], SceneBlockListZ[I]);
     }
-    UndoRedoUnitEnd();
+    UndoRedoUnitEnd(false);
+    ScreenRefresh();
 }
+

@@ -291,19 +291,22 @@
 
    <table id="T7" width="100%" border="1" cellpadding="0" cellspacing="0">
     <tr>
-     <td colspan="4" align="center" valign="center">
-      <input type="Text" value="" class="ctrl" id="StorageName">
+     <td width="75%" colspan="3" align="center" valign="center">
+      <input type="Text" value="" class="ctrl" id="StorageName" onchange="RetentionStorage()">
+     </td>
+     <td width="25%" align="center" valign="center">
+      <input type="Button" id="Storage0" value="Clear" class="ctrl" onclick="StorageClr();">
      </td>
     </tr>
     <tr>
      <td width="25%" align="center" valign="center">
-      <input type="Button" id="Storage1" value="Scene" class="ctrl" onclick="StorageSet(1);">
+      <input type="Button" id="Storage3" value="Scene" class="ctrl" onclick="StorageSet(3);">
      </td>
      <td width="25%" align="center" valign="center">
-      <input type="Button" id="Storage2" value="Object" class="ctrl" onclick="StorageSet(0);">
+      <input type="Button" id="Storage2" value="Object" class="ctrl" onclick="StorageSet(2);">
      </td>
      <td width="25%" align="center" valign="center">
-      <input type="Button" id="Storage3" value="View" class="ctrl" onclick="StorageSet(-1);">
+      <input type="Button" id="Storage1" value="View" class="ctrl" onclick="StorageSet(1);">
      </td>
      <td width="25%" align="center" valign="center">
       <input type="Button" id="Storage4" value="Remove" class="ctrl" onclick="StorageRem();">
@@ -319,19 +322,30 @@
    <table id="T8" width="100%" border="1" cellpadding="0" cellspacing="0">
     <tr>
      <td width="20%" align="center" valign="center">
-      <input type="Button" id="Text1" value="Sparse" class="ctrl" onclick="TextExport(1);"/>
+      <input type="Button" id="Text1" value="Sparse scene" class="ctrl" onclick="TextExport(1);"/>
      </td>
      <td width="20%" align="center" valign="center">
-      <input type="Button" id="Text2" value="Dense" class="ctrl" onclick="TextExport(2);"/>
+      <input type="Button" id="Text2" value="Dense scene" class="ctrl" onclick="TextExport(2);"/>
      </td>
-     <td width="20%" align="center" valign="center" colspan="2">
-      <input type="Button" id="Text0" value="Object" class="ctrl" onclick="TextExport(0);"/>
-     </td>
-     <td width="20%" align="center" valign="center">
-      <input type="Button" id="Text_" value="View" class="ctrl" onclick="TextExport(-1);"/>
+     <td colspan="2" width="20%" align="center" valign="center">
+      <input type="Button" id="Text0" value="View" class="ctrl" onclick="TextExport(0);"/>
      </td>
      <td width="20%" align="center" valign="center">
-      <input type="Button" id="TextX" value="Retrieve" class="ctrl" onclick="TextImport();"/>
+      <input type="Button" id="Text3" value="Sparse object" class="ctrl" onclick="TextExport(-11);"/>
+     </td>
+     <td width="20%" align="center" valign="center">
+      <input type="Button" id="Text4" value="Dense object" class="ctrl" onclick="TextExport(-12);"/>
+     </td>
+    </tr>
+    <tr>
+     <td colspan="2" width="40%" align="center" valign="center">
+      <input type="Button" id="TextX1" value="Retrieve scene" class="ctrl" onclick="TextImport(3);"/>
+     </td>
+     <td colspan="2" width="20%" align="center" valign="center">
+      <input type="Button" id="TextX0" value="Retrieve view" class="ctrl" onclick="TextImport(1);"/>
+     </td>
+     <td colspan="2" width="40%" align="center" valign="center">
+      <input type="Button" id="TextX2" value="Retrieve object" class="ctrl" onclick="TextImport(2);"/>
      </td>
     </tr>
     <tr>

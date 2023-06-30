@@ -49,6 +49,7 @@ function CursorEditState(X)
     }
     CursorMove(0, 0, 0);
     CursorSize(0, 0, 0);
+    ScreenRefresh();
 }
 
 
@@ -144,32 +145,42 @@ function CursorObject()
     this.P26_ = null;
     this.P27_ = null;
 
-    this.P00.scale.set(ScaleZ, ScaleY, 1);
-    this.P01.scale.set(ScaleZ, ScaleY, 1);
-    this.P02.scale.set(ScaleZ, ScaleY, 1);
-    this.P03.scale.set(ScaleZ, ScaleY, 1);
-    this.P04.scale.set(ScaleZ, ScaleY, 1);
-    this.P05.scale.set(ScaleZ, ScaleY, 1);
-    this.P06.scale.set(ScaleZ, ScaleY, 1);
-    this.P07.scale.set(ScaleZ, ScaleY, 1);
+    this.SetScale = function(ScaleX_, ScaleY_, ScaleZ_)
+    {
+        this.ScaleX = ScaleX_;
+        this.ScaleY = ScaleY_;
+        this.ScaleZ = ScaleZ_;
+        
+        this.P00.scale.set(this.ScaleZ, this.ScaleY, 1);
+        this.P01.scale.set(this.ScaleZ, this.ScaleY, 1);
+        this.P02.scale.set(this.ScaleZ, this.ScaleY, 1);
+        this.P03.scale.set(this.ScaleZ, this.ScaleY, 1);
+        this.P04.scale.set(this.ScaleZ, this.ScaleY, 1);
+        this.P05.scale.set(this.ScaleZ, this.ScaleY, 1);
+        this.P06.scale.set(this.ScaleZ, this.ScaleY, 1);
+        this.P07.scale.set(this.ScaleZ, this.ScaleY, 1);
 
-    this.P10.scale.set(ScaleX, ScaleY, 1);
-    this.P11.scale.set(ScaleX, ScaleY, 1);
-    this.P12.scale.set(ScaleX, ScaleY, 1);
-    this.P13.scale.set(ScaleX, ScaleY, 1);
-    this.P14.scale.set(ScaleX, ScaleY, 1);
-    this.P15.scale.set(ScaleX, ScaleY, 1);
-    this.P16.scale.set(ScaleX, ScaleY, 1);
-    this.P17.scale.set(ScaleX, ScaleY, 1);
+        this.P10.scale.set(this.ScaleX, this.ScaleY, 1);
+        this.P11.scale.set(this.ScaleX, this.ScaleY, 1);
+        this.P12.scale.set(this.ScaleX, this.ScaleY, 1);
+        this.P13.scale.set(this.ScaleX, this.ScaleY, 1);
+        this.P14.scale.set(this.ScaleX, this.ScaleY, 1);
+        this.P15.scale.set(this.ScaleX, this.ScaleY, 1);
+        this.P16.scale.set(this.ScaleX, this.ScaleY, 1);
+        this.P17.scale.set(this.ScaleX, this.ScaleY, 1);
 
-    this.P20.scale.set(ScaleZ, ScaleX, 1);
-    this.P21.scale.set(ScaleZ, ScaleX, 1);
-    this.P22.scale.set(ScaleZ, ScaleX, 1);
-    this.P23.scale.set(ScaleZ, ScaleX, 1);
-    this.P24.scale.set(ScaleZ, ScaleX, 1);
-    this.P25.scale.set(ScaleZ, ScaleX, 1);
-    this.P26.scale.set(ScaleZ, ScaleX, 1);
-    this.P27.scale.set(ScaleZ, ScaleX, 1);
+        this.P20.scale.set(this.ScaleZ, this.ScaleX, 1);
+        this.P21.scale.set(this.ScaleZ, this.ScaleX, 1);
+        this.P22.scale.set(this.ScaleZ, this.ScaleX, 1);
+        this.P23.scale.set(this.ScaleZ, this.ScaleX, 1);
+        this.P24.scale.set(this.ScaleZ, this.ScaleX, 1);
+        this.P25.scale.set(this.ScaleZ, this.ScaleX, 1);
+        this.P26.scale.set(this.ScaleZ, this.ScaleX, 1);
+        this.P27.scale.set(this.ScaleZ, this.ScaleX, 1);
+        
+    }
+
+    this.SetScale(ScaleX, ScaleY, ScaleZ);
 
     this.P10.rotation.set(0, ViewAngle90, 0);
     this.P11.rotation.set(0, ViewAngle90, 0);
@@ -188,6 +199,12 @@ function CursorObject()
     this.P25.rotation.set(ViewAngle90, 0, 0);
     this.P26.rotation.set(ViewAngle90, 0, 0);
     this.P27.rotation.set(ViewAngle90, 0, 0);
+
+    this.SetSizeForce = function(X, Y, Z)
+    {
+        this.SizeX_ = X + 1;
+        this.SetSize(X, Y, Z);
+    }
 
     this.SetSize = function(X, Y, Z)
     {
@@ -214,17 +231,17 @@ function CursorObject()
             this.Geo2Y = new THREE.PlaneBufferGeometry(ViewSize2 * this.BorderS2, (ViewSize2 * (Math.abs(Y) + 1)) - this.Margin - this.Margin);
             this.Geo2Z = new THREE.PlaneBufferGeometry(ViewSize2 * this.BorderS2, (ViewSize2 * (Math.abs(Z) + 1)) - this.Margin - this.Margin);
 
-            this.SizeOffsetX0 = ((ViewSize2 * X) / 2.0);
-            this.SizeOffsetX1 = (X > 0) ? (ViewSize2 * X) : 0;
-            this.SizeOffsetX2 = (X < 0) ? (ViewSize2 * X) : 0;
+            this.SizeOffsetX0 = ((ViewSize2 * X) / 2.0) * this.ScaleX;
+            this.SizeOffsetX1 = (X > 0) ? (ViewSize2 * X * this.ScaleX) : 0;
+            this.SizeOffsetX2 = (X < 0) ? (ViewSize2 * X * this.ScaleX) : 0;
 
-            this.SizeOffsetY0 = ((ViewSize2 * Y) / 2.0);
-            this.SizeOffsetY1 = (Y > 0) ? (ViewSize2 * Y) : 0;
-            this.SizeOffsetY2 = (Y < 0) ? (ViewSize2 * Y) : 0;
+            this.SizeOffsetY0 = ((ViewSize2 * Y) / 2.0) * this.ScaleY;
+            this.SizeOffsetY1 = (Y > 0) ? (ViewSize2 * Y * this.ScaleY) : 0;
+            this.SizeOffsetY2 = (Y < 0) ? (ViewSize2 * Y * this.ScaleY) : 0;
             
-            this.SizeOffsetZ0 = ((ViewSize2 * Z) / 2.0);
-            this.SizeOffsetZ1 = (Z > 0) ? (ViewSize2 * Z) : 0;
-            this.SizeOffsetZ2 = (Z < 0) ? (ViewSize2 * Z) : 0;
+            this.SizeOffsetZ0 = ((ViewSize2 * Z) / 2.0) * this.ScaleZ;
+            this.SizeOffsetZ1 = (Z > 0) ? (ViewSize2 * Z * this.ScaleZ) : 0;
+            this.SizeOffsetZ2 = (Z < 0) ? (ViewSize2 * Z * this.ScaleZ) : 0;
 
             this.P00_ = new THREE.Mesh(this.Geo1Z, this.Mat);
             this.P01_ = new THREE.Mesh(this.Geo1Z, this.Mat);
@@ -253,32 +270,32 @@ function CursorObject()
             this.P26_ = new THREE.Mesh(this.Geo2X, this.Mat);
             this.P27_ = new THREE.Mesh(this.Geo2X, this.Mat);
             
-            this.P00_.scale.set(ScaleZ, ScaleY, 1);
-            this.P01_.scale.set(ScaleZ, ScaleY, 1);
-            this.P02_.scale.set(ScaleZ, ScaleY, 1);
-            this.P03_.scale.set(ScaleZ, ScaleY, 1);
-            this.P04_.scale.set(ScaleZ, ScaleY, 1);
-            this.P05_.scale.set(ScaleZ, ScaleY, 1);
-            this.P06_.scale.set(ScaleZ, ScaleY, 1);
-            this.P07_.scale.set(ScaleZ, ScaleY, 1);
+            this.P00_.scale.set(this.ScaleZ, this.ScaleY, 1);
+            this.P01_.scale.set(this.ScaleZ, this.ScaleY, 1);
+            this.P02_.scale.set(this.ScaleZ, this.ScaleY, 1);
+            this.P03_.scale.set(this.ScaleZ, this.ScaleY, 1);
+            this.P04_.scale.set(this.ScaleZ, this.ScaleY, 1);
+            this.P05_.scale.set(this.ScaleZ, this.ScaleY, 1);
+            this.P06_.scale.set(this.ScaleZ, this.ScaleY, 1);
+            this.P07_.scale.set(this.ScaleZ, this.ScaleY, 1);
 
-            this.P10_.scale.set(ScaleX, ScaleY, 1);
-            this.P11_.scale.set(ScaleX, ScaleY, 1);
-            this.P12_.scale.set(ScaleX, ScaleY, 1);
-            this.P13_.scale.set(ScaleX, ScaleY, 1);
-            this.P14_.scale.set(ScaleX, ScaleY, 1);
-            this.P15_.scale.set(ScaleX, ScaleY, 1);
-            this.P16_.scale.set(ScaleX, ScaleY, 1);
-            this.P17_.scale.set(ScaleX, ScaleY, 1);
+            this.P10_.scale.set(this.ScaleX, this.ScaleY, 1);
+            this.P11_.scale.set(this.ScaleX, this.ScaleY, 1);
+            this.P12_.scale.set(this.ScaleX, this.ScaleY, 1);
+            this.P13_.scale.set(this.ScaleX, this.ScaleY, 1);
+            this.P14_.scale.set(this.ScaleX, this.ScaleY, 1);
+            this.P15_.scale.set(this.ScaleX, this.ScaleY, 1);
+            this.P16_.scale.set(this.ScaleX, this.ScaleY, 1);
+            this.P17_.scale.set(this.ScaleX, this.ScaleY, 1);
 
-            this.P20_.scale.set(ScaleZ, ScaleX, 1);
-            this.P21_.scale.set(ScaleZ, ScaleX, 1);
-            this.P22_.scale.set(ScaleZ, ScaleX, 1);
-            this.P23_.scale.set(ScaleZ, ScaleX, 1);
-            this.P24_.scale.set(ScaleZ, ScaleX, 1);
-            this.P25_.scale.set(ScaleZ, ScaleX, 1);
-            this.P26_.scale.set(ScaleZ, ScaleX, 1);
-            this.P27_.scale.set(ScaleZ, ScaleX, 1);
+            this.P20_.scale.set(this.ScaleZ, this.ScaleX, 1);
+            this.P21_.scale.set(this.ScaleZ, this.ScaleX, 1);
+            this.P22_.scale.set(this.ScaleZ, this.ScaleX, 1);
+            this.P23_.scale.set(this.ScaleZ, this.ScaleX, 1);
+            this.P24_.scale.set(this.ScaleZ, this.ScaleX, 1);
+            this.P25_.scale.set(this.ScaleZ, this.ScaleX, 1);
+            this.P26_.scale.set(this.ScaleZ, this.ScaleX, 1);
+            this.P27_.scale.set(this.ScaleZ, this.ScaleX, 1);
 
             this.P10_.rotation.set(0, ViewAngle90, 0);
             this.P11_.rotation.set(0, ViewAngle90, 0);
@@ -559,7 +576,7 @@ function CursorMove(DX, DY, DZ)
     switch (EditState)
     {
         case 4: // Move
-            SceneBlockList();
+            SceneBlockListCursor();
 
             // Check if space around block is enough for movement
             if (MovePossible)
@@ -593,7 +610,7 @@ function CursorMove(DX, DY, DZ)
             }
             break;
         case 5: // Rotate
-            SceneBlockList();
+            SceneBlockListCursor();
 
             // Check if space around block is enough for rotation
             if (MovePossible)
@@ -646,7 +663,7 @@ function CursorMove(DX, DY, DZ)
                 CursorCalcBounds();
                 
                 RotObjs = [];
-                SceneBlockList();
+                SceneBlockListCursor();
                 SceneBlockListRepaint();
             }
             MovePossible = false;
@@ -767,7 +784,7 @@ function CursorMove(DX, DY, DZ)
                             }
                         }
                         UndoRedoUnitBlock2Obj(Obj1);
-                        RetentionAddObj(Obj1);
+                        RetentionAdd(Obj1);
                     }
                 }
             }
@@ -785,11 +802,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(0, false);
                             UndoRedoUnitBlock2Obj(Obj1);
-                            RetentionAddObj(Obj1);
+                            RetentionAdd(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(1, false);
                             UndoRedoUnitBlock2Obj(Obj2);
-                            RetentionAddObj(Obj2);
+                            RetentionAdd(Obj2);
                         }
                     }
 
@@ -802,11 +819,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(1, false);
                             UndoRedoUnitBlock2Obj(Obj1);
-                            RetentionAddObj(Obj1);
+                            RetentionAdd(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(0, false);
                             UndoRedoUnitBlock2Obj(Obj2);
-                            RetentionAddObj(Obj2);
+                            RetentionAdd(Obj2);
                         }
                     }
                 }
@@ -825,11 +842,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(5, false);
                             UndoRedoUnitBlock2Obj(Obj1);
-                            RetentionAddObj(Obj1);
+                            RetentionAdd(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(4, false);
                             UndoRedoUnitBlock2Obj(Obj2);
-                            RetentionAddObj(Obj2);
+                            RetentionAdd(Obj2);
                         }
                     }
 
@@ -842,11 +859,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(4, false);
                             UndoRedoUnitBlock2Obj(Obj1);
-                            RetentionAddObj(Obj1);
+                            RetentionAdd(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(5, false);
                             UndoRedoUnitBlock2Obj(Obj2);
-                            RetentionAddObj(Obj2);
+                            RetentionAdd(Obj2);
                         }
                     }
                 }
@@ -865,11 +882,11 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(3, false);
                             UndoRedoUnitBlock2Obj(Obj1);
-                            RetentionAddObj(Obj1);
+                            RetentionAdd(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(2, false);
                             UndoRedoUnitBlock2Obj(Obj2);
-                            RetentionAddObj(Obj2);
+                            RetentionAdd(Obj2);
                         }
                     }
 
@@ -882,18 +899,18 @@ function CursorMove(DX, DY, DZ)
                             UndoRedoUnitBlock1Obj(Obj1);
                             Obj1.SetFace(2, false);
                             UndoRedoUnitBlock2Obj(Obj1);
-                            RetentionAddObj(Obj1);
+                            RetentionAdd(Obj1);
                             UndoRedoUnitBlock1Obj(Obj2);
                             Obj2.SetFace(3, false);
                             UndoRedoUnitBlock2Obj(Obj2);
-                            RetentionAddObj(Obj2);
+                            RetentionAdd(Obj2);
                         }
                     }
                 }
             }
 
-            SceneBlockList();
-            SceneBlockListRepaintObj(Obj1);
+            SceneBlockListCursor();
+            SceneBlockListRepaint();
             
             break;
         case 3: // Erase
@@ -921,7 +938,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(1, true);
                         UndoRedoUnitBlock2Obj(Obj2);
-                        RetentionAddObj(Obj2);
+                        RetentionAdd(Obj2);
                     }
 
                     Obj2 = SceneGet(CursorX + CursorSizeX_2 + 1, CursorY + I_Y, CursorZ + I_Z);
@@ -930,7 +947,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(0, true);
                         UndoRedoUnitBlock2Obj(Obj2);
-                        RetentionAddObj(Obj2);
+                        RetentionAdd(Obj2);
                     }
                 }
             }
@@ -965,7 +982,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(4, true);
                         UndoRedoUnitBlock2Obj(Obj2);
-                        RetentionAddObj(Obj2);
+                        RetentionAdd(Obj2);
                     }
 
                     Obj2 = SceneGet(CursorX + I_X, CursorY + CursorSizeY_2 + 1, CursorZ + I_Z);
@@ -974,7 +991,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(5, true);
                         UndoRedoUnitBlock2Obj(Obj2);
-                        RetentionAddObj(Obj2);
+                        RetentionAdd(Obj2);
                     }
                 }
             }
@@ -1009,7 +1026,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(2, true);
                         UndoRedoUnitBlock2Obj(Obj2);
-                        RetentionAddObj(Obj2);
+                        RetentionAdd(Obj2);
                     }
 
                     Obj2 = SceneGet(CursorX + I_X, CursorY + I_Y, CursorZ + CursorSizeZ_2 + 1);
@@ -1018,7 +1035,7 @@ function CursorMove(DX, DY, DZ)
                         UndoRedoUnitBlock1Obj(Obj2);
                         Obj2.SetFace(3, true);
                         UndoRedoUnitBlock2Obj(Obj2);
-                        RetentionAddObj(Obj2);
+                        RetentionAdd(Obj2);
                     }
                 }
             }
@@ -1049,15 +1066,25 @@ function CursorMove(DX, DY, DZ)
 
     switch (EditState)
     {
+        default:
+            UndoRedoUnitEnd(false);
+            break;
         case 0: // Cursor
             ColorGet();
+            UndoRedoUnitEnd(false);
             break;
         case 1: // Color
             ColorSet();
+            UndoRedoUnitEnd(false);
+            break;
+        case 2: // Add
+            UndoRedoUnitEnd(true);
+            break;
+        case 3: // Erase
+            UndoRedoUnitEnd(true);
             break;
     }
-    
-    UndoRedoUnitEnd();
+
     RetentionCamCur();
 }
 

@@ -86,14 +86,14 @@ For each color kind and color channel there are two buttons\. The value on noth 
 
 ## CameraAngle
 
-This module allows to change the camera view angle\. Its consists of 5 buttons:
+This module allows to change the camera view angle and scale values\. Its consists of 5 buttons:
 
 
-* **Fast tele** \- Decrease angle by 10 degrees\.
-* **Slow tele** \- Decrease angle by 1 degree\.
-* **Angle value** \- Show current angle value and set arbitrary angle\.
-* **Slow wide** \- Increase angle by 1 degree\.
-* **Fast wide** \- Increase angle by 12 degree\.
+* **Fast tele** \- Decrease view angle by 10 degrees\.
+* **Slow tele** \- Decrease view angle by 1 degree\.
+* **Angle value** \- Set view angle and scale values\.
+* **Slow wide** \- Increase view angle by 1 degree\.
+* **Fast wide** \- Increase view angle by 12 degree\.
 
 The camera view angle can be between 1 \(extremely tele\) and 179 \(extremely wide\)\.
 
@@ -120,6 +120,7 @@ The module consists of three elements:
 
 * **Text field** \- The name of element for save or remove\.
 * **Buttons**:
+  * **Clear** \- Clear the text field\.
   * **Scene** \- Save whole scene\.
   * **Object** \- Save bricks under the cursor\.
   * **View** \- Save camera view only\.
@@ -131,6 +132,16 @@ The module consists of three elements:
 
 If you retrieve any item, the element name will be pasted in the text field\. This features allows to easy replace or remove the item\. For remove any item, retrieve the item by clicking on the name and click the **Remove** button\. Any item can be replaced with item of any type, the replacement is the same as remove item followed by save item using the name of formerly removed item\.
 
+You can force load any storage item as scene, as object or as view\. To force thic, slear the text field by **Clear** button and click one of the following buttons:
+
+
+* **Clear** or **Remove** \- Disable force\.
+* **Scene** \- Force retrieving any item as scene \- clear current scene, move camera and create new scene\.
+* **Object** \- Force retrieving any item as object \- paste object without camera movement\.
+* **View** \- Force retrieving any item as view \- move camera only\.
+
+The forced item type will be indicated by brackets around the name of **Scene**, **Object**, **View** button\.
+
 ## Text
 
 The module consists of several buttons and multiline text field\. Its purpose is import and export items as text, which you can save on your device\.
@@ -138,11 +149,14 @@ The module consists of several buttons and multiline text field\. Its purpose is
 These buttons has the following actions:
 
 
-* **Sparse** \- Generate text describing whole scene in sparse format\.
-* **Dense** \- Generate text describing whole scene in dense format\.
-* **Object** \- Generate text describing object under cursor\.
+* **Sparse scene** \- Generate text describing whole scene in sparse format\.
+* **Dense scene** \- Generate text describing whole scene in dense format\.
 * **View** \- Generate text describing current camera view only\.
-* **Retrieve** \- Aquire the text from field and read as scene/object/view depending on text description\.
+* **Sparse object** \- Generate text describing object under cursor in sparse format\.
+* **Dense object** \- Generate text describing object under cursor in dense format\.
+* **Retrieve scene** \- Aquire the text from field and retrieve as scene \- clear current scene, move camera and create new scene\.
+* **Retrieve view** \- Aquire the text from field and retrieve as view \- move camera only\.
+* **Retrieve object** \- Aquire the text from field and retrieve as object \- paste object without camera movement\.
 
 Below the text field, there are two additional buttons:
 
@@ -218,6 +232,150 @@ Below the mentioned split button, there are button with horizontal arrow\. The b
 Between modules, there are buttons with vertical up\-down arrow\. This button swaps the two modules around this button\.
 
 For choose the emodule to move from the column to ther column, use the swap buttons to move the module into the top most position\. After this, you can move the module using the horizontal arrow button\.
+
+# Text data format
+
+The scene, object or view can be stored as text consisting of two parts\. The first part is the header consisting of 9 lines, the second part id data and can be empty or consist of any number of lines\.
+
+## Header part
+
+The header part consists of 9 lines\. Some lines has several values, which are separated by vertical bar character\.
+
+The header lines are following:
+
+
+* **Line 1** \- **one value** \- Element type, which defines the type:
+  * **0** \- View, the only type, which does not contain data part but forces camera movement without scene modification\.
+  * **1** \- Scene or object in sparce format\.
+  * **2** \- Scene or object in dense format\.
+* **Line 2** \- **three values** \- Scene rendering scale\.
+* **Line 3** \- **three values** \- Camera position\.
+* **Line 4** \- **three values** \- Camera rotation\.
+* **Line 5** \- **one value** \- Camera view angle\.
+* **Line 6** \- **three values** \- Cursor position\.
+* **Line 7** \- **three values** \- Cursor size\.
+* **Line 8** \- **four values** \- Color values outside the bricks in the order:
+  * Background\.
+  * Cursor\.
+  * Face\.
+  * Frame\.
+* **Line 9** \- **six values** \- The scene bounds in the order:
+  * X\-minimum\.
+  * X\-maximum\.
+  * Y\-minimum\.
+  * Y\-maximum\.
+  * Z\-minimum\.
+  * Z\-maximum\.
+
+## Data part for sparse scene
+
+The sparse format is the list of all blocks with specified coordinates and attributes\. Item order does not matter when import\.
+
+Every line describes single block and consists of 7 values separated by vertical bar\.
+
+The first values are the block coordinates:
+
+
+* **Value 1** \- X coordinate\.
+* **Value 2** \- Y coordinate\.
+* **Value 3** \- Z coordinate\.
+
+The other values are the block attributes:
+
+
+* **Value 1** \- Face color as RGB, consisting of three digits:
+  * The red channel, from 0 to 4\.
+  * The green channel, from 0 to 4\.
+  * The blue channel, from 0 to 4\.
+* **Value 2** \- Border color as RGB, the same format as previous value\.
+* **Value 3** \- Face existence, BlockSim uses this block attributes for find the other blocks, that makes up for the same brick:
+  * Top and bottom faces, values from 0 to 3\.
+  * Left and right faces, values from 0 to 3\.
+  * Front and rear faces, values from 0 to 3\.
+* **Value 4** \- Not used now, reserved for eventually additional attributes in future\. Exported value is always **000** and does not matter in import\.
+
+## Data part for dense sceene
+
+The dense format is the character matrix, which represents contents within the area specified in line 9\.
+
+The item are arranged with the following order by Y and Z coordinates:
+
+
+* Z1,Y1
+* Z1,Y2
+* Z1,\.\.\.
+* Z1,Yn
+* Z2,Y1
+* Z2,Y2
+* Z2,\.\.\.
+* Z2,Yn
+* \.\.\.,\.\.\.
+* Zn,Y1
+* Zn,Y2
+* Zn,\.\.\.
+* Zn,Yn
+
+The single item represent whole X coodinate within specified Y and Z coordinates\.
+
+Actually, the single item consists of two lines and single block consists of 6 characters, so to represent single block, there are used 12 characters\.
+
+For example, the 2x2 scene will generate 8 lines with 12 characters with following layout:
+
+```
+AAAAAABBBBBB
+AAAAAABBBBBB
+CCCCCCDDDDDD
+CCCCCCDDDDDD
+EEEEEEFFFFFF
+EEEEEEFFFFFF
+GGGGGGHHHHHH
+GGGGGGHHHHHH
+```
+
+The coordinates will be following, related to most bottom, most left, most rear box:
+
+
+* **A** \- \(0, 0, 0\)
+* **B** \- \(1, 0, 0\)
+* **C** \- \(0, 1, 0\)
+* **D** \- \(1, 1, 0\)
+* **E** \- \(0, 0, 1\)
+* **F** \- \(1, 0, 1\)
+* **G** \- \(0, 1, 1\)
+* **H** \- \(1, 1, 1\)
+
+The blank coordinates \(without box\) will generate underscores\.
+
+Within single block, the 12 characters are in the following layout:
+
+```
+AAABBB
+CCCDDD
+```
+
+
+* **AAA** \- Face color\.
+* **BBB** \- Border color\.
+* **CCC** \- Face existence\.
+* **DDD** \- Not used\.
+
+## Distinguish existing and non\-existing box
+
+In the dense format, there must be way for represent "empty" block, ie\. the coordinates, where the block does not exist\. In the export, all 12 characters will be represented as **\_** \(underscore\) character\.
+
+In the import, the block existence is recognized by color values\. Both colors can totally consists of 6 characters, which can be numbers from **0** to **4**\. The faces value consists of three characters, the numbers from **0** to **3**\. Existence of any forbidden character within color values or faces, is considered as the block does not exist\.
+
+## Face alternative characters
+
+In the face field for import, you can use some characters instead of digits:
+
+
+* 0 \- space \[** **\], underscore \[**\_**\] \- for visualize empty
+* 1 \- less\-than \[**<**\], caret \[**^**\], hash \[**\#**\], \- for visualize left, top, front side
+* 2 \- greater\-than \[**>**\], **V**, dot \[**\.**\] \- for visualize right, bottom, rear side\.
+* 3 \- **X** \- for visualize both opposite sides\.
+
+The alternative character can make easier manually generating or modifying scene text file\.
 
 
 

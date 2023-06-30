@@ -85,6 +85,9 @@ function UndoRedo0()
 
     if (DataExists(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx))
     {
+        BufScreenRepaintPre();
+        SceneBlockListClear();
+
         let UndoRedoBufEntry = JSON.parse(DataGet(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx));
         for (let I = UndoRedoBufEntry.ScreenList.length - 1; I >= 0; I--)
         {
@@ -110,9 +113,28 @@ function UndoRedo0()
         CursorSizeX = UndoRedoBufEntry.CursorSizeX_1;
         CursorSizeY = UndoRedoBufEntry.CursorSizeY_1;
         CursorSizeZ = UndoRedoBufEntry.CursorSizeZ_1;
-    }
 
-    BufScreenRepaint();
+        if (UndoRedoBufEntry.RequestRepaint)
+        {
+            SceneBlockListClear();
+            for (let I = UndoRedoBufEntry.ScreenList.length - 1; I >= 0; I--)
+            {
+                let X = UndoRedoBufEntry.ScreenList[I].X;
+                let Y = UndoRedoBufEntry.ScreenList[I].Y;
+                let Z = UndoRedoBufEntry.ScreenList[I].Z;
+                if (!UndoRedoBufEntry.ScreenList[I].Move)
+                {
+                    if (UndoRedoBufEntry.ScreenList[I].Step1.Block)
+                    {
+                        SceneBlockListWork(X, Y, Z, -1);
+                    }
+                }
+            }
+        }
+        SceneBlockListRepaint();
+
+        BufScreenRepaint();
+    }
 }
 
 function UndoRedo1()
@@ -124,6 +146,9 @@ function UndoRedo1()
 
     if (DataExists(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx))
     {        
+        BufScreenRepaintPre();
+        SceneBlockListClear();
+
         let UndoRedoBufEntry = JSON.parse(DataGet(LSPrefix + "UndoRedoBuf_" + UndoRedoBufIdx));
         for (let I = 0; I < UndoRedoBufEntry.ScreenList.length; I++)
         {
@@ -149,9 +174,28 @@ function UndoRedo1()
         CursorSizeX = UndoRedoBufEntry.CursorSizeX_2;
         CursorSizeY = UndoRedoBufEntry.CursorSizeY_2;
         CursorSizeZ = UndoRedoBufEntry.CursorSizeZ_2;
+
+        if (UndoRedoBufEntry.RequestRepaint)
+        {
+            SceneBlockListClear();
+            for (let I = 0; I < UndoRedoBufEntry.ScreenList.length; I++)
+            {
+                let X = UndoRedoBufEntry.ScreenList[I].X;
+                let Y = UndoRedoBufEntry.ScreenList[I].Y;
+                let Z = UndoRedoBufEntry.ScreenList[I].Z;
+                if (!UndoRedoBufEntry.ScreenList[I].Move)
+                {
+                    if (UndoRedoBufEntry.ScreenList[I].Step2.Block)
+                    {
+                        SceneBlockListWork(X, Y, Z, -1);
+                    }
+                }
+            }
+        }
+        SceneBlockListRepaint();
+        
+        BufScreenRepaint();
     }
-    
-    BufScreenRepaint();
 
     UndoRedoBufIdx++;
     DataSet(LSPrefix + "UndoRedoBufIdx", UndoRedoBufIdx);
@@ -164,7 +208,8 @@ function UndoRedo(X, Y, Z, Src, Dst)
         let Obj = SceneAdd(X, Y, Z);
         Obj.SetColor(Dst.Color1R, Dst.Color1G, Dst.Color1B, Dst.Color2R, Dst.Color2G, Dst.Color2B);
         Obj.SetFaces(Dst.Face0, Dst.Face1, Dst.Face2, Dst.Face3, Dst.Face4, Dst.Face5);
-        RetentionAddObj(Obj);
+        RetentionAdd(Obj);
+        SceneBlockListAddXYZ(X, Y, Z);
     }
     else
     {
@@ -190,7 +235,7 @@ function UndoRedoUnitBegin()
     UndoRedoUnit.ScreenList = [];
 }
 
-function UndoRedoUnitEnd()
+function UndoRedoUnitEnd(RequestRepaint)
 {
     UndoRedoUnit.CursorX_2 = CursorX;
     UndoRedoUnit.CursorY_2 = CursorY;
@@ -198,6 +243,7 @@ function UndoRedoUnitEnd()
     UndoRedoUnit.CursorSizeX_2 = CursorSizeX;
     UndoRedoUnit.CursorSizeY_2 = CursorSizeY;
     UndoRedoUnit.CursorSizeZ_2 = CursorSizeZ;
+    UndoRedoUnit.RequestRepaint = RequestRepaint;
 
     if (UndoRedoUnit.ScreenList.length > 0)
     {

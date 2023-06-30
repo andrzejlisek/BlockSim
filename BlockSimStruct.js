@@ -1,29 +1,26 @@
-function SceneBlockList()
+function SceneBlockListClear()
 {
     SceneBlockListX = [];
     SceneBlockListY = [];
     SceneBlockListZ = [];
-    CursorCalcBounds();
-    for (let XX = (CursorX + CursorSizeX_1); XX <= (CursorX + CursorSizeX_2); XX++)
+    SceneBlockListI = [];
+}
+
+function SceneBlockListAddXYZ(XX, YY, ZZ)
+{
+    let Idx = Idx_(XX, YY, ZZ);
+    if (SceneBlockListI.indexOf(Idx) < 0)
     {
-        for (let YY = (CursorY + CursorSizeY_1); YY <= (CursorY + CursorSizeY_2); YY++)
-        {
-            for (let ZZ = (CursorZ + CursorSizeZ_1); ZZ <= (CursorZ + CursorSizeZ_2); ZZ++)
-            {
-                SceneBlockListXYZ(XX, YY, ZZ, -2);
-            }
-        }
+        SceneBlockListX.push(XX);
+        SceneBlockListY.push(YY);
+        SceneBlockListZ.push(ZZ);
+        SceneBlockListI.push(Idx);
     }
 }
 
 function SceneBlockListXYZ(XX, YY, ZZ, Depth)
 {
-    if (Depth > (0 - 2))
-    {
-        SceneBlockListX = [];
-        SceneBlockListY = [];
-        SceneBlockListZ = [];
-    }
+    SceneBlockListClear();
     SceneBlockListWork(XX, YY, ZZ, Depth);
 }
 
@@ -36,12 +33,7 @@ function SceneBlockListWork(XX, YY, ZZ, Depth)
     var Obj = SceneGet(XX, YY, ZZ);
     if (Obj)
     {
-        if(!SceneBlockListExists(XX, YY, ZZ))
-        {
-            SceneBlockListX.push(XX);
-            SceneBlockListY.push(YY);
-            SceneBlockListZ.push(ZZ);
-        }
+        SceneBlockListAddXYZ(XX, YY, ZZ);
         if (!Obj.Face0) { SceneBlockListWork(XX - 1, YY, ZZ, Depth - 1); }
         if (!Obj.Face1) { SceneBlockListWork(XX + 1, YY, ZZ, Depth - 1); }
         if (!Obj.Face2) { SceneBlockListWork(XX, YY, ZZ + 1, Depth - 1); }
@@ -53,20 +45,30 @@ function SceneBlockListWork(XX, YY, ZZ, Depth)
 
 function SceneBlockListExists(XX, YY, ZZ)
 {
-    for (var I = 0; I < SceneBlockListX.length; I++)
+    if (SceneBlockListI.indexOf(Idx_(XX, YY, ZZ)) >= 0)
     {
-        if (SceneBlockListX[I] == XX)
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+function SceneBlockListCursor()
+{
+    SceneBlockListClear();
+    CursorCalcBounds();
+    for (let XX = (CursorX + CursorSizeX_1); XX <= (CursorX + CursorSizeX_2); XX++)
+    {
+        for (let YY = (CursorY + CursorSizeY_1); YY <= (CursorY + CursorSizeY_2); YY++)
         {
-            if (SceneBlockListY[I] == YY)
+            for (let ZZ = (CursorZ + CursorSizeZ_1); ZZ <= (CursorZ + CursorSizeZ_2); ZZ++)
             {
-                if (SceneBlockListZ[I] == ZZ)
-                {
-                    return true;
-                }
+                SceneBlockListWork(XX, YY, ZZ, -1);
             }
         }
     }
-    return false;
 }
 
 function SceneBlockListRepaintObj(Obj)
@@ -85,31 +87,6 @@ function SceneBlockListRepaint()
             Obj.Repaint();
         }
     }
-    return false;
-}
-
-function SceneBlockListRepaintWithFlag()
-{
-    let ObjList = []
-    for (let I = 0; I < SceneBlockListX.length; I++)
-    {
-        let Obj = SceneGet(SceneBlockListX[I], SceneBlockListY[I], SceneBlockListZ[I]);
-        if (Obj)
-        {
-            Obj.ToRepaint = true;
-            ObjList.push(Obj);
-        }
-    }
-    for (let I = 0; I < ObjList.length; I++)
-    {
-        var Obj = ObjList[I];
-        if (Obj.ToRepaint)
-        {
-            SceneBlockListXYZ(Obj.PosX, Obj.PosY, Obj.PosZ, -1);
-            SceneBlockListRepaint();
-        }
-    }
-    return false;
 }
 
 function SceneBlockListSort(Mode)
@@ -141,17 +118,6 @@ function SceneBlockListSort(Mode)
     }
 }
 
-
-
-
-// https://stackoverflow.com/questions/1208222/how-to-do-associative-array-hashing-in-javascript
-// http://pietschsoft.com/post/2015/09/05/JavaScript-Basics-How-to-create-a-Dictionary-with-KeyValue-pairs
-// https://flaviocopes.com/how-to-remove-object-property-javascript/
-
-//SceneStruct["a"] = "qwe";
-//SceneStruct["s"] = "asd";
-//SceneStruct["d"] = "zxc";
-//delete SceneStruct["s"];
 
 function Idx_(IdxX, IdxY, IdxZ)
 {
@@ -186,23 +152,12 @@ function SceneExists(IdxX, IdxY, IdxZ)
 }
 
 
-//var MsgX = "";
-//for(var key in SceneStruct){
-//  var value = SceneStruct[key];
-//  MsgX  += "[" + key + "]={" + SceneStruct[key] + "}\n";
-//  /* use key/value for intended purpose */
-//}
-//alert(MsgX);
-//alert(Object.keys(SceneStruct));
-
-
-
 function SceneAddIdx(IdxX, IdxY, IdxZ, Obj)
 {
     var Idx = Idx_(IdxX, IdxY, IdxZ);
     Obj.SetPosition(IdxX, IdxY, IdxZ);
     SceneStruct[Idx] = Obj;
-    RetentionAdd(Idx, Obj);
+    RetentionAdd(Obj);
 }
 
 function SceneRemIdx(IdxX, IdxY, IdxZ)
@@ -238,7 +193,7 @@ function SceneAdd(IdxX, IdxY, IdxZ)
         Obj.SetColor(ColorDef1R, ColorDef1G, ColorDef1B, ColorDef2R, ColorDef2G, ColorDef2B);
         Obj.SetPosition(IdxX, IdxY, IdxZ);
         SceneStruct[Idx] = Obj;
-        RetentionAdd(Idx, Obj);
+        RetentionAdd(Obj);
         return Obj;
     }
     else
@@ -276,12 +231,10 @@ function SceneMove(IdxX, IdxY, IdxZ, DX, DY, DZ)
             SceneStruct[Idx0].SetPosition(IdxX + DX, IdxY + DY, IdxZ + DZ);
             
             RetentionRem(Idx);
-            RetentionAdd(Idx0, SceneStruct[Idx0]);
+            RetentionAdd(SceneStruct[Idx0]);
             
             delete SceneStruct[Idx];
         }
-        //SceneStruct[Idx].Remove();
-        //delete SceneStruct[Idx];
     }
 }
 
@@ -346,9 +299,9 @@ function SceneRotateCoord(XX, YY, ZZ, DX, DY, DZ)
 
 function SceneRotate(IdxX, IdxY, IdxZ, DX, DY, DZ)
 {
-    if ((DX != 0) && (DY != 0))    { return; }
-    if ((DY != 0) && (DZ != 0))    { return; }
-    if ((DZ != 0) && (DX != 0))    { return; }
+    if ((DX != 0) && (DY != 0)) { return; }
+    if ((DY != 0) && (DZ != 0)) { return; }
+    if ((DZ != 0) && (DX != 0)) { return; }
     
     var Idx = Idx_(IdxX, IdxY, IdxZ);
     if (typeof SceneStruct[Idx] === 'undefined')
@@ -387,18 +340,15 @@ function SceneRotate(IdxX, IdxY, IdxZ, DX, DY, DZ)
         {
             SceneStruct[Idx].SetFaces(XFace5, XFace4, XFace2, XFace3, XFace0, XFace1);
         }
-        RetentionAdd(Idx, SceneStruct[Idx]);
+        RetentionAdd(SceneStruct[Idx]);
     }
 }
 
-function SceneRepaintWhole(Flag)
+function SceneRepaintWhole()
 {
-    if (Flag)
+    for (var I in SceneStruct)
     {
-        for (var I in SceneStruct)
-        {
-            SceneStruct[I].ToRepaint = true;
-        }
+        SceneStruct[I].ToRepaint = true;
     }
     for (var I in SceneStruct)
     {
@@ -451,10 +401,11 @@ function ScaleSet(ScaleX_, ScaleY_, ScaleZ_)
             Obj.SetPosition(Obj_PosX, Obj_PosY, Obj_PosZ);
             SceneStruct[I] = Obj;
         }
-        SceneRepaintWhole(false);
+        SceneRepaintWhole();
         Cursor.Hide();
-        Cursor = new CursorObject();
-        Cursor.SetSize(CursorSizeX, CursorSizeY, CursorSizeZ);
+        Cursor.SetScale(ScaleX, ScaleY, ScaleZ);
+        Cursor.SetSizeForce(CursorSizeX, CursorSizeY, CursorSizeZ);
         Cursor.SetPosition(CursorX, CursorY, CursorZ);
+        Cursor.Show();
     }
 }

@@ -148,6 +148,7 @@ var SceneStruct = {};
 var SceneBlockListX = [];
 var SceneBlockListY = [];
 var SceneBlockListZ = [];
+var SceneBlockListI = [];
 
 var SceneRotateCoordX = 0;
 var SceneRotateCoordY = 0;

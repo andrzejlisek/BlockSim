@@ -23,8 +23,9 @@ function RetentionClear()
     DataSet(LSPrefix + "RetentionDataCount", RetentionDataCount);
 }
 
-function RetentionAdd(Idx, Obj)
+function RetentionAdd(Obj)
 {
+    let Idx = Idx_(Obj.PosX, Obj.PosY, Obj.PosZ);
     if (Idx in RetentionDataMap)
     {
         DataSet(LSPrefix + "RetentionData_" + RetentionDataMap[Idx], JSON.stringify(Obj.GetInfo()));
@@ -76,12 +77,6 @@ function RetentionRem(Idx)
     RetentionResetCounter();
 }
 
-
-function RetentionAddObj(Obj)
-{
-    RetentionAdd(Idx_(Obj.PosX, Obj.PosY, Obj.PosZ), Obj);
-}
-
 function RetentionResetCounter()
 {
     RetentionCounter = 0;
@@ -121,7 +116,9 @@ function RetentionCamCur()
     RetentionHeader.ColorDef2B = ColorDef2B;
     
     RetentionHeader.EditState = EditState;
-
+    
+    RetentionHeader.StorageBtnMode = StorageBtnMode;
+    
     DataSet(LSPrefix + "RetentionHeader", JSON.stringify(RetentionHeader));
 
     RetentionResetCounter();
@@ -174,9 +171,13 @@ function RetentionLoad()
             ColorDef2B = RetentionHeader.ColorDef2B;
 
             EditState_ = RetentionHeader.EditState;
+            
+            StorageBtnMode = RetentionHeader.StorageBtnMode;
         }
     
        
+        BufScreenRepaintPre();
+        SceneBlockListClear();
         for (let I = 0; I < RetentionDataCount; I++)
         {
             let DataItemName = LSPrefix + "RetentionData_" + I;
@@ -187,14 +188,16 @@ function RetentionLoad()
                 let Obj = SceneAdd(ObjInfo.PX, ObjInfo.PY, ObjInfo.PZ);
                 Obj.SetFaces(ObjInfo.F0, ObjInfo.F1, ObjInfo.F2, ObjInfo.F3, ObjInfo.F4, ObjInfo.F5);
                 Obj.SetColor(ObjInfo.C1R, ObjInfo.C1G, ObjInfo.C1B, ObjInfo.C2R, ObjInfo.C2G, ObjInfo.C2B);
-                RetentionAddObj(Obj);
+                RetentionAdd(Obj);
+                SceneBlockListAddXYZ(ObjInfo.PX, ObjInfo.PY, ObjInfo.PZ);
             }
             else
             {
                 RetentionDataHole.push(I);
             }
         }
-        
+        SceneBlockListRepaint();
+
         BufScreenRepaint();
         ColorSetDef();
         
@@ -208,13 +211,22 @@ function RetentionLoad()
         {
             document.getElementById("TextBuffer").value = DataGet(LSPrefix + "RetentionText");
         }
+        if (DataExists(LSPrefix + "RetentionStorageName"))
+        {
+            document.getElementById("StorageName").value = DataGet(LSPrefix + "RetentionStorageName");
+        }
     }
     else
     {
         RetentionCounter = 0;
         DataSet(LSPrefix + "RetentionCounter", RetentionCounter);
         RetentionClear();
+        ClipboardClear();
         
+        if (DataExists(LSPrefix + "RetentionStorageName"))
+        {
+            DataDelete(LSPrefix + "RetentionStorageName");
+        }
         if (DataExists(LSPrefix + "RetentionText"))
         {
             DataDelete(LSPrefix + "RetentionText");
@@ -234,9 +246,18 @@ function RetentionLoad()
                 }
             }
             DataDelete(LSPrefix + "RetentionDataCount");
-        }        
+        }
+        document.getElementById("StorageName").value = "";        
         document.getElementById("TextBuffer").value = "";
     }
+
+    StorageBtn();
+}
+
+function RetentionStorage()
+{
+    DataSet(LSPrefix + "RetentionStorageName", document.getElementById("StorageName").value);
+    RetentionCamCur();
 }
 
 function RetentionText()
@@ -244,5 +265,4 @@ function RetentionText()
     DataSet(LSPrefix + "RetentionText", document.getElementById("TextBuffer").value);
     RetentionResetCounter();
 }
-
 

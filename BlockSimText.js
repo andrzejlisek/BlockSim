@@ -4,9 +4,9 @@ function TextExport(Mode)
     RetentionText();
 }
 
-function TextImport()
+function TextImport(Mode)
 {
-    BufImport(document.getElementById("TextBuffer").value);
+    BufImport(document.getElementById("TextBuffer").value, Mode);
 }
 
 function TextCopy()
@@ -42,7 +42,19 @@ function TextPaste()
 
 function BufExport(Mode)
 {
-    var Buf = Mode + "\n";
+    let Buf = Mode + "\n";
+    if (Mode < 0)
+    {
+        if (Mode > (0 - 10))
+        {
+            Buf = Mode + "\n";
+        }
+        else
+        {
+            Mode = Mode + 10;
+            Buf = (0 - Mode) + "\n";
+        }
+    }
     Buf = Buf + ScaleX + "|" + ScaleY + "|" + ScaleZ + "\n";
     Buf = Buf + CameraPosX + "|" + CameraPosY + "|" + CameraPosZ + "\n";
     Buf = Buf + CameraRotX + "|" + CameraRotY + "|" + CameraRotZ + "\n";
@@ -62,56 +74,85 @@ function BufExport(Mode)
     var MinZ = 0;
     var MaxZ = 0;
 
-    var MinMaxInit = false;
-    for (var I in SceneStruct)
-    {
-        Obj = SceneStruct[I];
-        if (MinMaxInit)
-        {
-            if (MinX > Obj.PosX) { MinX = Obj.PosX; }
-            if (MaxX < Obj.PosX) { MaxX = Obj.PosX; }
-            if (MinY > Obj.PosY) { MinY = Obj.PosY; }
-            if (MaxY < Obj.PosY) { MaxY = Obj.PosY; }
-            if (MinZ > Obj.PosZ) { MinZ = Obj.PosZ; }
-            if (MaxZ < Obj.PosZ) { MaxZ = Obj.PosZ; }
-        }
-        else
-        {
-            MinX = Obj.PosX;
-            MaxX = Obj.PosX;
-            MinY = Obj.PosY;
-            MaxY = Obj.PosY;
-            MinZ = Obj.PosZ;
-            MaxZ = Obj.PosZ;
-            MinMaxInit = 1;
-        }
-    }
-    Buf = Buf + MinX + "|" + MaxX + "|" + MinY + "|" + MaxY + "|" + MinZ + "|" + MaxZ + "\n";
+    let TempObjList = [];
 
-    if (Mode == 0)
-    {
-        SceneBlockList();
-        for (var I = 0; I < SceneBlockListX.length; I++)
-        {
-            var Obj = SceneGet(SceneBlockListX[I], SceneBlockListY[I], SceneBlockListZ[I]);
-            if (Obj)
-            {
-                Buf = Buf + Obj.PosX + "|" + Obj.PosY + "|" + Obj.PosZ;
-                Buf = Buf + "|" + BufExportColor(Obj.Color1R, Obj.Color1G, Obj.Color1B);
-                Buf = Buf + "|" + BufExportColor(Obj.Color2R, Obj.Color2G, Obj.Color2B);
-                Buf = Buf + "|" + BufExportFace(Obj.Face2, Obj.Face3) + BufExportFace(Obj.Face0, Obj.Face1) + BufExportFace(Obj.Face4, Obj.Face5);
-                Buf = Buf + "|000";
-                Buf = Buf + "\n";
-            }
-        }
-    }
-    if (Mode == 1)
+    var MinMaxInit = false;
+    if (Mode > 0)
     {
         for (var I in SceneStruct)
         {
             Obj = SceneStruct[I];
             if (Obj)
             {
+                TempObjList.push(Obj);
+                let Obj_PosX = Obj.PosX;
+                let Obj_PosY = Obj.PosY;
+                let Obj_PosZ = Obj.PosZ;
+                if (MinMaxInit)
+                {
+                    if (MinX > Obj_PosX) { MinX = Obj_PosX; }
+                    if (MaxX < Obj_PosX) { MaxX = Obj_PosX; }
+                    if (MinY > Obj_PosY) { MinY = Obj_PosY; }
+                    if (MaxY < Obj_PosY) { MaxY = Obj_PosY; }
+                    if (MinZ > Obj_PosZ) { MinZ = Obj_PosZ; }
+                    if (MaxZ < Obj_PosZ) { MaxZ = Obj_PosZ; }
+                }
+                else
+                {
+                    MinX = Obj_PosX;
+                    MaxX = Obj_PosX;
+                    MinY = Obj_PosY;
+                    MaxY = Obj_PosY;
+                    MinZ = Obj_PosZ;
+                    MaxZ = Obj_PosZ;
+                    MinMaxInit = 1;
+                }
+            }
+        }
+    }
+    if (Mode < 0)
+    {
+        SceneBlockListCursor();
+        for (var I = 0; I < SceneBlockListX.length; I++)
+        {
+            let Obj_PosX = SceneBlockListX[I];
+            let Obj_PosY = SceneBlockListY[I];
+            let Obj_PosZ = SceneBlockListZ[I];
+            Obj = SceneGet(Obj_PosX, Obj_PosY, Obj_PosZ);
+            if (Obj)
+            {
+                TempObjList.push(Obj);
+                if (MinMaxInit)
+                {
+                    if (MinX > Obj_PosX) { MinX = Obj_PosX; }
+                    if (MaxX < Obj_PosX) { MaxX = Obj_PosX; }
+                    if (MinY > Obj_PosY) { MinY = Obj_PosY; }
+                    if (MaxY < Obj_PosY) { MaxY = Obj_PosY; }
+                    if (MinZ > Obj_PosZ) { MinZ = Obj_PosZ; }
+                    if (MaxZ < Obj_PosZ) { MaxZ = Obj_PosZ; }
+                }
+                else
+                {
+                    MinX = Obj_PosX;
+                    MaxX = Obj_PosX;
+                    MinY = Obj_PosY;
+                    MaxY = Obj_PosY;
+                    MinZ = Obj_PosZ;
+                    MaxZ = Obj_PosZ;
+                    MinMaxInit = 1;
+                }
+            }
+        }
+    }
+    Buf = Buf + MinX + "|" + MaxX + "|" + MinY + "|" + MaxY + "|" + MinZ + "|" + MaxZ + "\n";
+
+    if ((Mode == -1) || (Mode == 1))
+    {
+        for (var I = 0; I < TempObjList.length; I++)
+        {
+            var Obj = TempObjList[I];
+            if (Obj)
+            {
                 Buf = Buf + Obj.PosX + "|" + Obj.PosY + "|" + Obj.PosZ;
                 Buf = Buf + "|" + BufExportColor(Obj.Color1R, Obj.Color1G, Obj.Color1B);
                 Buf = Buf + "|" + BufExportColor(Obj.Color2R, Obj.Color2G, Obj.Color2B);
@@ -121,7 +162,8 @@ function BufExport(Mode)
             }
         }
     }
-    if (Mode == 2)
+
+    if ((Mode == -2) || (Mode == 2))
     {
         let Buf1;
         let Buf2;
@@ -133,7 +175,23 @@ function BufExport(Mode)
                 Buf2 = "";
                 for (var XXX = MinX; XXX <= MaxX; XXX++)
                 {
-                    Obj = SceneGet(XXX, YYY, ZZZ);
+                    if (Mode > 0)
+                    {
+                        Obj = SceneGet(XXX, YYY, ZZZ);
+                    }
+                    else
+                    {
+                        Obj = 0;
+                        for (var I = 0; I < TempObjList.length; I++)
+                        {
+                            if ((TempObjList[I].PosX == XXX) && (TempObjList[I].PosY == YYY) && (TempObjList[I].PosZ == ZZZ))
+                            {
+                                Obj = TempObjList[I];
+                                TempObjList.splice(I, 1);
+                                break;
+                            }
+                        }
+                    }
                     if (Obj)
                     {
                         Buf1 += BufExportColor(Obj.Color1R, Obj.Color1G, Obj.Color1B);
@@ -181,25 +239,7 @@ function BufExportFace(F1_, F2_)
     }
 }
 
-function BufImportIsColor(Buf1_, Buf2_)
-{
-    for (var I = 0; I < 3; I++)
-    {
-        var X1 = Buf1_.substr(I, 1);
-        var X2 = Buf2_.substr(I, 1);
-        if ((X1 != "0") && (X1 != "1") && (X1 != "2") && (X1 != "3") && (X1 != "4"))
-        {
-            return false;
-        }
-        if ((X2 != "0") && (X2 != "1") && (X2 != "2") && (X2 != "3") && (X2 != "4"))
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-function BufImport(Buf_)
+function BufImport(Buf_, XMode)
 {
     let ImportSuccess = true;
 
@@ -213,31 +253,54 @@ function BufImport(Buf_)
     }
     let Mode = 0;
 
+    SceneBlockListClear();
+
     if (ImportSuccess)
     {
         let BufX = Buf[0].split("|");
         Mode = NumI(BufX[0]);
+        
+        if (XMode == 0)
+        {
+            if (Mode == 0)
+            {
+                XMode = 1;
+            }
+            if (Mode < 0)
+            {
+                XMode = 2;
+            }
+            if (Mode > 0)
+            {
+                XMode = 3;
+            }
+        }
+
+        if (Mode < 0)
+        {
+            Mode = 0 - Mode;
+        }
 
         let CursorX__ = 0;
         let CursorY__ = 0;
         let CursorZ__ = 0;
 
-        if (Mode != (0 - 1))
+        if ((XMode == 2) || (XMode == 3))
         {
             EditState = 0;
         }
         CursorEditStateBtn();
 
-        if (Mode != 0)
+        if ((XMode == 1) || (XMode == 3))
         {
-            if (Mode != (0 - 1))
+            if (XMode == 3)
             {
                 SceneClear();
 
                 BufX = Buf[1].split("|");
-                ScaleX_ = NumF(BufX[0]);
-                ScaleY_ = NumF(BufX[1]);
-                ScaleZ_ = NumF(BufX[2]);
+                let ScaleX_ = NumF(BufX[0]);
+                let ScaleY_ = NumF(BufX[1]);
+                let ScaleZ_ = NumF(BufX[2]);
                 ScaleSet(ScaleX_, ScaleY_, ScaleZ_);
             }
 
@@ -260,7 +323,7 @@ function BufImport(Buf_)
         CursorY__ = NumI(BufX[1]);
         CursorZ__ = NumI(BufX[2]);
         
-        if (Mode > 0)
+        if (XMode == 3)
         {
             CursorX = CursorX__;
             CursorY = CursorY__;
@@ -277,7 +340,7 @@ function BufImport(Buf_)
         }
 
 
-        if (Mode > 0)
+        if (XMode == 3)
         {
             UndoRedoClear();
         }
@@ -287,11 +350,15 @@ function BufImport(Buf_)
         }
 
 
-        BufX = Buf[6].split("|");
-        CursorSizeX = NumI(BufX[0]);
-        CursorSizeY = NumI(BufX[1]);
-        CursorSizeZ = NumI(BufX[2]);
-        if (Mode > 0)
+        if ((XMode == 2) || (XMode == 3))
+        {
+            BufX = Buf[6].split("|");
+            CursorSizeX = NumI(BufX[0]);
+            CursorSizeY = NumI(BufX[1]);
+            CursorSizeZ = NumI(BufX[2]);
+        }
+        
+        if (XMode == 3)
         {
             BufX = Buf[7].split("|");
             BufImportColor(BufX[0]);
@@ -320,111 +387,125 @@ function BufImport(Buf_)
         var MaxY = NumI(BufX[3]);
         var MinZ = NumI(BufX[4]);
         var MaxZ = NumI(BufX[5]);
-
-        if ((Mode == 0) || (Mode == 1))
+        
+        if ((XMode == 2) || (XMode == 3))
         {
-            for (var I = BufDataIdx; I < Buf.length; I++)
-            {
-                BufX = Buf[I].split("|");
-                if (BufX.length > 6)
-                {
-                    if (SceneExists(NumI(BufX[0]) + CursorX__, NumI(BufX[1]) + CursorY__, NumI(BufX[2]) + CursorZ__))
-                    {
-                        ImportSuccess = false;
-                    }
-                }
-            }
-            if (ImportSuccess)
+            if (Mode == 1)
             {
                 for (var I = BufDataIdx; I < Buf.length; I++)
                 {
                     BufX = Buf[I].split("|");
                     if (BufX.length > 6)
                     {
-                        let IdxX = NumI(BufX[0]) + CursorX__;
-                        let IdxY = NumI(BufX[1]) + CursorY__;
-                        let IdxZ = NumI(BufX[2]) + CursorZ__;
-                        UndoRedoUnitBlock1Blank(IdxX, IdxY, IdxZ);
-                        let Obj_ = SceneAdd(IdxX, IdxY, IdxZ);
-                        BufImportSetColorFaces(Obj_, BufX[3], BufX[4], BufX[5]);
-                        UndoRedoUnitBlock2Obj(Obj_);
+                        if (SceneExists(NumI(BufX[0]) + CursorX__, NumI(BufX[1]) + CursorY__, NumI(BufX[2]) + CursorZ__))
+                        {
+                            ImportSuccess = false;
+                        }
+                    }
+                }
+                if (ImportSuccess)
+                {
+                    for (var I = BufDataIdx; I < Buf.length; I++)
+                    {
+                        BufX = Buf[I].split("|");
+                        if (BufX.length > 6)
+                        {
+                            let IdxX = NumI(BufX[0]) + CursorX__;
+                            let IdxY = NumI(BufX[1]) + CursorY__;
+                            let IdxZ = NumI(BufX[2]) + CursorZ__;
+                            if (BufImportSetColorFaces(IdxX, IdxY, IdxZ, BufX[3], BufX[4], BufX[5], BufX[6]))
+                            {
+                                SceneBlockListAddXYZ(IdxX, IdxY, IdxZ);
+                            }
+                        }
                     }
                 }
             }
-        }
-        if (Mode == 2)
-        {
-            let Buf1 = "";
-            let Buf2 = "";
-            let Buf3 = "";
-            let Buf4 = "";
-            var I = BufDataIdx;
-            var II;
-            var ElementAllowed;
-            for (var ZZZ = MinZ; ZZZ <= MaxZ; ZZZ++)
+            if (Mode == 2)
             {
-                for (var YYY = MinY; YYY <= MaxY; YYY++)
+                let Buf1 = "";
+                let Buf2 = "";
+                let Buf3 = "";
+                let Buf4 = "";
+                var I = BufDataIdx;
+                var II;
+                for (var ZZZ = MinZ; ZZZ <= MaxZ; ZZZ++)
                 {
-                    II = 0;
-                    for (var XXX = MinX; XXX <= MaxX; XXX++)
+                    for (var YYY = MinY; YYY <= MaxY; YYY++)
                     {
-                        Buf1 = Buf[I + 0].substr(II + 0, 3);
-                        Buf2 = Buf[I + 0].substr(II + 3, 3);
-                        Buf3 = Buf[I + 1].substr(II + 0, 3);
-                        Buf4 = Buf[I + 1].substr(II + 3, 3);
-                        Buf3 = Replace(Buf3, " ", "0");
-                        Buf3 = Replace(Buf3, "_", "0");
-                        Buf3 = Replace(Buf3, "<", "1");
-                        Buf3 = Replace(Buf3, "^", "1");
-                        Buf3 = Replace(Buf3, "#", "1");
-                        Buf3 = Replace(Buf3, ">", "2");
-                        Buf3 = Replace(Buf3, "v", "2");
-                        Buf3 = Replace(Buf3, ".", "2");
-                        Buf3 = Replace(Buf3, "X", "3");
-                        if (BufImportIsColor(Buf1, Buf2))
+                        for (var XXX = MinX; XXX <= MaxX; XXX++)
                         {
-                            BufImportSetColorFaces(SceneAdd(XXX, YYY, ZZZ), Buf1, Buf2, Buf3);
+                            if (SceneExists(XXX, YYY, ZZZ))
+                            {
+                                ImportSuccess = false;
+                            }
                         }
-                        II += 6;
                     }
-                    I += 2;
+                }
+                if (ImportSuccess)
+                {
+                    for (var ZZZ = MinZ; ZZZ <= MaxZ; ZZZ++)
+                    {
+                        for (var YYY = MinY; YYY <= MaxY; YYY++)
+                        {
+                            II = 0;
+                            for (var XXX = MinX; XXX <= MaxX; XXX++)
+                            {
+                                Buf1 = Buf[I + 0].substr(II + 0, 3);
+                                Buf2 = Buf[I + 0].substr(II + 3, 3);
+                                Buf3 = Buf[I + 1].substr(II + 0, 3);
+                                Buf4 = Buf[I + 1].substr(II + 3, 3);
+                                if (BufImportSetColorFaces(XXX, YYY, ZZZ, Buf1, Buf2, Buf3, Buf4))
+                                {
+                                    SceneBlockListAddXYZ(XXX, YYY, ZZZ);
+                                }
+                                II += 6;
+                            }
+                            I += 2;
+                        }
+                    }
                 }
             }
         }
 
-        if (Mode > 0)
+        if (XMode == 3)
         {
             UndoRedoClear();
         }
         else
         {
-            UndoRedoUnitEnd();
+            UndoRedoUnitEnd(false);
         }
     }
     RetentionCamCur();
     
-    if (Mode == 0)
+    SceneBlockListRepaint();
+
+    if (XMode == 2)
     {
         CursorHide();
         Cursor.SetSize(CursorSizeX, CursorSizeY, CursorSizeZ);
         Cursor.SetPosition(CursorX, CursorY, CursorZ);
         CursorCalcBounds();
         CursorShow();
-
-        SceneBlockList();
-        SceneBlockListRepaintWithFlag();
+        ScreenRefresh();
     }
     else
     {
+        BufScreenRepaintPre();
         BufScreenRepaint();
         ColorSetDef();
     }
     return ImportSuccess;
 }
 
-function BufScreenRepaint()
+function BufScreenRepaintPre()
 {
     CursorHide();
+}
+
+function BufScreenRepaint()
+{
     Cursor.SetSize(CursorSizeX, CursorSizeY, CursorSizeZ);
     Cursor.SetPosition(CursorX, CursorY, CursorZ);
     CursorCalcBounds();
@@ -432,8 +513,7 @@ function BufScreenRepaint()
     ColorGet();
     GuiSet();
     CursorShow();
-    SceneRepaintWhole(true);
-    
+    ScreenRefresh();    
     RetentionCamCur();
 }
 
@@ -448,14 +528,58 @@ function BufImportColor(X)
     BufImportColorB = NumI(X.substr(2, 1));
 }
 
-function BufImportSetColorFaces(Obj, Color1, Color2, Faces)
+function BufImportSetColorFaces(IdxX, IdxY, IdxZ, Color1, Color2, Faces, Shape)
 {
-    var F1 = Faces.substr(0, 1);
-    var F2 = Faces.substr(1, 1);
-    var F3 = Faces.substr(2, 1);
-    Obj.SetColor(NumI(Color1.substr(0, 1)), NumI(Color1.substr(1, 1)), NumI(Color1.substr(2, 1)), NumI(Color2.substr(0, 1)), NumI(Color2.substr(1, 1)), NumI(Color2.substr(2, 1)));
-    Obj.SetFaces((F2 == 1) || (F2 == 3), (F2 == 2) || (F2 == 3), (F1 == 1) || (F1 == 3), (F1 == 2) || (F1 == 3), (F3 == 1) || (F3 == 3), (F3 == 2) || (F3 == 3));
-    RetentionAddObj(Obj);
+    Faces = Replace(Faces, " ", "0");
+    Faces = Replace(Faces, "_", "0");
+    Faces = Replace(Faces, "<", "1");
+    Faces = Replace(Faces, "^", "1");
+    Faces = Replace(Faces, "#", "1");
+    Faces = Replace(Faces, ">", "2");
+    Faces = Replace(Faces, "v", "2");
+    Faces = Replace(Faces, "V", "2");
+    Faces = Replace(Faces, ".", "2");
+    Faces = Replace(Faces, "x", "3");
+    Faces = Replace(Faces, "X", "3");
+
+    let ObjGood = true;
+
+    for (var I = 0; I < 3; I++)
+    {
+        let X1 = Color1.substr(I, 1);
+        let X2 = Color2.substr(I, 1);
+        let X3 = Faces.substr(I, 1);
+        if ((X1 != "0") && (X1 != "1") && (X1 != "2") && (X1 != "3") && (X1 != "4"))
+        {
+            ObjGood = false;
+        }
+        if ((X2 != "0") && (X2 != "1") && (X2 != "2") && (X2 != "3") && (X2 != "4"))
+        {
+            ObjGood = false;
+        }
+        if ((X3 != "0") && (X3 != "1") && (X3 != "2") && (X3 != "3"))
+        {
+            ObjGood = false;
+        }
+    }
+
+    if (ObjGood)
+    {
+        let F1 = NumI(Faces.substr(0, 1));
+        let F2 = NumI(Faces.substr(1, 1));
+        let F3 = NumI(Faces.substr(2, 1));
+
+        UndoRedoUnitBlock1Blank(IdxX, IdxY, IdxZ);
+        let Obj = SceneAdd(IdxX, IdxY, IdxZ);
+
+        Obj.SetColor(NumI(Color1.substr(0, 1)), NumI(Color1.substr(1, 1)), NumI(Color1.substr(2, 1)), NumI(Color2.substr(0, 1)), NumI(Color2.substr(1, 1)), NumI(Color2.substr(2, 1)));
+        Obj.SetFaces((F2 == 1) || (F2 == 3), (F2 == 2) || (F2 == 3), (F1 == 1) || (F1 == 3), (F1 == 2) || (F1 == 3), (F3 == 1) || (F3 == 3), (F3 == 2) || (F3 == 3));
+        RetentionAdd(Obj);
+
+        UndoRedoUnitBlock2Obj(Obj);
+    }
+    
+    return ObjGood;
 }
 
 
@@ -469,64 +593,149 @@ function Replace(S, str1, str2, ignore)
     return S.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
 }
 
+let StorageBtnMode = 0;
 
+function StorageBtn()
+{
+    switch(StorageBtnMode)
+    {
+        case 0:
+            document.getElementById("Storage3").value = "Scene";
+            document.getElementById("Storage2").value = "Object";
+            document.getElementById("Storage1").value = "View";
+            break;
+        case 1:
+            document.getElementById("Storage3").value = "Scene";
+            document.getElementById("Storage2").value = "Object";
+            document.getElementById("Storage1").value = "[View]";
+            break;
+        case 2:
+            document.getElementById("Storage3").value = "Scene";
+            document.getElementById("Storage2").value = "[Object]";
+            document.getElementById("Storage1").value = "View";
+            break;
+        case 3:
+            document.getElementById("Storage3").value = "[Scene]";
+            document.getElementById("Storage2").value = "Object";
+            document.getElementById("Storage1").value = "View";
+            break;
+    }
+}
+
+function StorageIsFilled()
+{
+    let X = document.getElementById("StorageName").value.trim();
+    if (X == "")
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
 
 function StorageSet(Mode)
 {
-    let X = document.getElementById("StorageName").value.trim();
-    if (X == "") { return; }
-    let N = StorageList();
-    
-    let V = BufExport(Mode);
-
-    for (let I = 0; I < N; I++)
+    if (StorageIsFilled())
     {
-        if (DataGet(LSPrefix + "OBJ_N_" + I) == X)
+        let X = document.getElementById("StorageName").value.trim();
+        if (X == "") { return; }
+        let N = StorageList();
+        
+        let V = "";
+        
+        switch (Mode)
         {
-            DataSet(LSPrefix + "OBJ_V_" + I, V);
-            StorageList();
-            return;
+            case 1: V = BufExport(0); break;
+            case 2: V = BufExport(-1); break;
+            case 3: V = BufExport(1); break;
         }
-        if (DataGet(LSPrefix + "OBJ_N_" + I) > X)
+        
+        for (let I = 0; I < N; I++)
         {
-            for (let II = N; II > I; II--)
+            if (DataGet(LSPrefix + "OBJ_N_" + I) == X)
             {
-                DataSet(LSPrefix + "OBJ_N_" + II, DataGet(LSPrefix + "OBJ_N_" + (II - 1)));
-                DataSet(LSPrefix + "OBJ_V_" + II, DataGet(LSPrefix + "OBJ_V_" + (II - 1)));
+                if (confirm("Overwrite existing \"" + X + "\"?"))
+                {
+                    DataSet(LSPrefix + "OBJ_V_" + I, V);
+                }
+                StorageList();
+                return;
             }
-            DataSet(LSPrefix + "OBJ_N_" + I, X);
-            DataSet(LSPrefix + "OBJ_V_" + I, V);
-            StorageList();
-            return;
+            if (DataGet(LSPrefix + "OBJ_N_" + I) > X)
+            {
+                for (let II = N; II > I; II--)
+                {
+                    DataSet(LSPrefix + "OBJ_N_" + II, DataGet(LSPrefix + "OBJ_N_" + (II - 1)));
+                    DataSet(LSPrefix + "OBJ_V_" + II, DataGet(LSPrefix + "OBJ_V_" + (II - 1)));
+                }
+                DataSet(LSPrefix + "OBJ_N_" + I, X);
+                DataSet(LSPrefix + "OBJ_V_" + I, V);
+                StorageList();
+                return;
+            }
         }
-    }
 
-    DataSet(LSPrefix + "OBJ_N_" + N, X);
-    DataSet(LSPrefix + "OBJ_V_" + N, V);
+        DataSet(LSPrefix + "OBJ_N_" + N, X);
+        DataSet(LSPrefix + "OBJ_V_" + N, V);
+    }
+    else
+    {
+        StorageBtnMode = Mode;
+        StorageBtn();
+    }
     StorageList();
+    RetentionStorage();
+}
+
+function StorageClr()
+{
+    if (StorageIsFilled())
+    {
+        document.getElementById("StorageName").value = "";
+    }
+    else
+    {
+        StorageBtnMode = 0;
+        StorageBtn();
+    }
+    RetentionStorage();
 }
 
 function StorageRem()
 {
-    let X = document.getElementById("StorageName").value.trim();
-    if (X == "") { return; }
-    let N = StorageList();
-    let Idx = -1;
-    for (let I = 0; I < N; I++)
+    if (StorageIsFilled())
     {
-        if (DataGet(LSPrefix + "OBJ_N_" + I) == X)
+        let X = document.getElementById("StorageName").value.trim();
+        if (X == "") { return; }
+        let N = StorageList();
+        let Idx = -1;
+        for (let I = 0; I < N; I++)
         {
-            for (let II = I; II < (N - 1); II++)
+            if (DataGet(LSPrefix + "OBJ_N_" + I) == X)
             {
-                DataSet(LSPrefix + "OBJ_N_" + II, DataGet(LSPrefix + "OBJ_N_" + (II + 1)));
-                DataSet(LSPrefix + "OBJ_V_" + II, DataGet(LSPrefix + "OBJ_V_" + (II + 1)));
+                if (confirm("Remove \"" + X + "\"?"))
+                {
+                    for (let II = I; II < (N - 1); II++)
+                    {
+                        DataSet(LSPrefix + "OBJ_N_" + II, DataGet(LSPrefix + "OBJ_N_" + (II + 1)));
+                        DataSet(LSPrefix + "OBJ_V_" + II, DataGet(LSPrefix + "OBJ_V_" + (II + 1)));
+                    }
+                    DataDelete(LSPrefix + "OBJ_N_" + (N - 1));
+                    DataDelete(LSPrefix + "OBJ_V_" + (N - 1));
+                }
+                StorageList();
+                return;
             }
-            DataDelete(LSPrefix + "OBJ_N_" + (N - 1));
-            DataDelete(LSPrefix + "OBJ_V_" + (N - 1));
-            StorageList();
-            return;
         }
     }
+    else
+    {
+        StorageBtnMode = 0;
+        StorageBtn();
+    }
+    RetentionStorage();
 }
 
 function StorageInput(X)
@@ -534,8 +743,9 @@ function StorageInput(X)
     if (DataExists(LSPrefix + "OBJ_N_" + X) && DataExists(LSPrefix + "OBJ_V_" + X))
     {
         document.getElementById("StorageName").value = DataGet(LSPrefix + "OBJ_N_" + X);
-        BufImport(DataGet(LSPrefix + "OBJ_V_" + X));
+        BufImport(DataGet(LSPrefix + "OBJ_V_" + X), StorageBtnMode);
     }
+    RetentionStorage();
 }
 
 function StorageList()
@@ -545,7 +755,6 @@ function StorageList()
     while (DataExists(LSPrefix + "OBJ_N_" + I))
     {
         X = X + "<input type=\"button\" value=\"" + DataGet(LSPrefix + "OBJ_N_" + I) + "\" onclick=\"StorageInput(" + I + ");\" style=\"height:" + SET_Control1Size + "px;font-size:" + SET_Control2Size + "px\"> ";
-        //X = X + "<a href=\"javascript:void(0);\" onclick=\"StorageInput(" + I + ");\">" + DataGet(LSPrefix + "OBJ_N_" + I) + "</a><br/>";
         I++;
     }
     document.getElementById("StorageList").innerHTML = X;

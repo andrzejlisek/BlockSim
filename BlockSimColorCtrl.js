@@ -52,9 +52,9 @@ function GuiSet()
     CursorColorB = NumF(document.getElementById("Color4B").value);
 
     ViewRenderer.setClearColor(ColorNum[ColorBackR] * 65536 + ColorNum[ColorBackG] * 256 + ColorNum[ColorBackB], 1);
+    Cursor.Repaint();
     CameraPosAng();
     RetentionCamCur();
-    Cursor.Repaint();
 }
 
 function ColorGet()
@@ -85,7 +85,7 @@ function ColorGet()
 
 function ColorSet()
 {
-    SceneBlockList();
+    SceneBlockListCursor();
     var Color1R = NumF(document.getElementById("Color1R").value);
     var Color1G = NumF(document.getElementById("Color1G").value);
     var Color1B = NumF(document.getElementById("Color1B").value);
@@ -102,7 +102,7 @@ function ColorSet()
                 UndoRedoUnitBlock1Obj(Obj);
                 Obj.SetColor(Color1R, Color1G, Color1B, Color2R, Color2G, Color2B);
                 Obj.Repaint();
-                RetentionAddObj(Obj);
+                RetentionAdd(Obj);
                 UndoRedoUnitBlock2Obj(Obj);
             }
         }
@@ -204,7 +204,8 @@ function ColorCtrl(NumId)
         case 2:
             UndoRedoUnitBegin();
             ColorSet();
-            UndoRedoUnitEnd();
+            UndoRedoUnitEnd(false);
+            ScreenRefresh();
             break;
         case 3:
         case 4:
