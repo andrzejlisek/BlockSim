@@ -89,6 +89,64 @@ function SceneBlockListRepaint()
     }
 }
 
+let SceneBlockListRepaintAsyncI = 0;
+let SceneBlockListRepaintAsyncL = 0;
+
+function SceneBlockListRepaintAsync()
+{
+    SceneBlockListRepaintAsyncI = 0;
+    SceneBlockListRepaintAsyncL = SceneBlockListX.length;
+    SceneBlockListRepaintAsyncWork();
+    
+    /*for (var I = 0; I < SceneBlockListX.length; I++)
+    {
+
+        var Obj = SceneGet(SceneBlockListX[I], SceneBlockListY[I], SceneBlockListZ[I]);
+        if (Obj)
+        {
+            Obj.Repaint();
+        }
+    }*/
+}
+
+function SceneBlockListRepaintAsyncWork()
+{
+    BusyStatus(BusyStatusPercent(SceneBlockListRepaintAsyncI + SceneBlockListRepaintAsyncL, SceneBlockListRepaintAsyncL + SceneBlockListRepaintAsyncL));
+    let WorkTime = performance.now() + SET_BusyWork;
+    while (true)
+    {
+        var Obj = SceneGet(SceneBlockListX[SceneBlockListRepaintAsyncI], SceneBlockListY[SceneBlockListRepaintAsyncI], SceneBlockListZ[SceneBlockListRepaintAsyncI]);
+        if (Obj)
+        {
+            Obj.Repaint();
+        }
+        SceneBlockListRepaintAsyncI++;
+        if (SceneBlockListRepaintAsyncI == SceneBlockListRepaintAsyncL)
+        {
+            break;
+        }
+        if (performance.now() > WorkTime)
+        {
+            break;
+        }
+    }
+    if (SceneBlockListRepaintAsyncI < SceneBlockListRepaintAsyncL)
+    {
+        setTimeout(SceneBlockListRepaintAsyncWork, SET_BusyTime);
+    }
+    else
+    {
+        SceneBlockListRepaintAsyncFinish();
+    }
+}
+
+function SceneBlockListRepaintAsyncFinish()
+{
+    SceneBlockListRepaintAsyncI = 0;
+    SceneBlockListRepaintAsyncL = 0;
+}
+
+
 function SceneBlockListSort(Mode)
 {
     for (var I = 0; I < SceneBlockListX.length; I++)

@@ -87,7 +87,6 @@ GuiGet();
 StorageList();
 UndoRedoClear();
 RetentionLoad();
-UndoRedoFromTemp()
 
 document.addEventListener("keydown", KeyPress, false);
 

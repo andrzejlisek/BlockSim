@@ -55,7 +55,10 @@ var RenderUpd = true;
 var CameraAngle_ = 0;
 
 
-
+let IsBusy = false;
+let SET_BusyWork = 200;
+let SET_BusyTime = 100;
+let SET_BusyWait = 500;
 
 var EditState = 0;
 

@@ -239,11 +239,36 @@ function BufExportFace(F1_, F2_)
     }
 }
 
+let BufImport_XMode;
+let BufImport_Buf;
+let BufImport_I;
+let BufImport_II;
+let BufImport_L;
+let BufImport_X;
+let BufImport_Y;
+let BufImport_Z;
+let BufImport_X1;
+let BufImport_Y1;
+let BufImport_Z1;
+let BufImport_X2;
+let BufImport_Y2;
+let BufImport_Z2;
+
 function BufImport(Buf_, XMode)
 {
+    BusyStart();
+    BufImport_I = 0;
+    BufImport_L = 0;
+
+
+    BufImport_XMode = XMode;
+
+    console.log("Start " + performance.now());
+
     let ImportSuccess = true;
 
     let Buf = Buf_.split("\n");
+    BufImport_Buf = Buf;
 
     let BufDataIdx = 9;
     
@@ -381,15 +406,16 @@ function BufImport(Buf_, XMode)
         CursorCalcBounds();
         
         BufX = Buf[8].split("|");
-        var MinX = NumI(BufX[0]);
-        var MaxX = NumI(BufX[1]);
-        var MinY = NumI(BufX[2]);
-        var MaxY = NumI(BufX[3]);
-        var MinZ = NumI(BufX[4]);
-        var MaxZ = NumI(BufX[5]);
+        BufImport_X1 = NumI(BufX[0]);
+        BufImport_X2 = NumI(BufX[1]);
+        BufImport_Y1 = NumI(BufX[2]);
+        BufImport_Y2 = NumI(BufX[3]);
+        BufImport_Z1 = NumI(BufX[4]);
+        BufImport_Z2 = NumI(BufX[5]);
         
         if ((XMode == 2) || (XMode == 3))
         {
+            console.log("Malowanie Start " + performance.now());
             if (Mode == 1)
             {
                 for (var I = BufDataIdx; I < Buf.length; I++)
@@ -403,22 +429,15 @@ function BufImport(Buf_, XMode)
                         }
                     }
                 }
+            console.log("Malowanie Zbadano " + performance.now());
                 if (ImportSuccess)
                 {
-                    for (var I = BufDataIdx; I < Buf.length; I++)
-                    {
-                        BufX = Buf[I].split("|");
-                        if (BufX.length > 6)
-                        {
-                            let IdxX = NumI(BufX[0]) + CursorX__;
-                            let IdxY = NumI(BufX[1]) + CursorY__;
-                            let IdxZ = NumI(BufX[2]) + CursorZ__;
-                            if (BufImportSetColorFaces(IdxX, IdxY, IdxZ, BufX[3], BufX[4], BufX[5], BufX[6]))
-                            {
-                                SceneBlockListAddXYZ(IdxX, IdxY, IdxZ);
-                            }
-                        }
-                    }
+                    BufImport_X = CursorX__;
+                    BufImport_Y = CursorY__;
+                    BufImport_Z = CursorZ__;
+                    BufImport_I = BufDataIdx;
+                    BufImport_L = Buf.length;
+                    BufImportPaint1();
                 }
             }
             if (Mode == 2)
@@ -429,11 +448,11 @@ function BufImport(Buf_, XMode)
                 let Buf4 = "";
                 var I = BufDataIdx;
                 var II;
-                for (var ZZZ = MinZ; ZZZ <= MaxZ; ZZZ++)
+                for (var ZZZ = BufImport_Z1; ZZZ <= BufImport_Z2; ZZZ++)
                 {
-                    for (var YYY = MinY; YYY <= MaxY; YYY++)
+                    for (var YYY = BufImport_Y1; YYY <= BufImport_Y2; YYY++)
                     {
-                        for (var XXX = MinX; XXX <= MaxX; XXX++)
+                        for (var XXX = BufImport_X1; XXX <= BufImport_X2; XXX++)
                         {
                             if (SceneExists(XXX, YYY, ZZZ))
                             {
@@ -442,46 +461,65 @@ function BufImport(Buf_, XMode)
                         }
                     }
                 }
+            console.log("Malowanie Zbadano " + performance.now());
                 if (ImportSuccess)
                 {
-                    for (var ZZZ = MinZ; ZZZ <= MaxZ; ZZZ++)
-                    {
-                        for (var YYY = MinY; YYY <= MaxY; YYY++)
-                        {
-                            II = 0;
-                            for (var XXX = MinX; XXX <= MaxX; XXX++)
-                            {
-                                Buf1 = Buf[I + 0].substr(II + 0, 3);
-                                Buf2 = Buf[I + 0].substr(II + 3, 3);
-                                Buf3 = Buf[I + 1].substr(II + 0, 3);
-                                Buf4 = Buf[I + 1].substr(II + 3, 3);
-                                if (BufImportSetColorFaces(XXX, YYY, ZZZ, Buf1, Buf2, Buf3, Buf4))
-                                {
-                                    SceneBlockListAddXYZ(XXX, YYY, ZZZ);
-                                }
-                                II += 6;
-                            }
-                            I += 2;
-                        }
-                    }
+                    BufImport_X = BufImport_X2 - BufImport_X1 + 1;
+                    BufImport_Y = BufImport_Y2 - BufImport_Y1 + 1;
+                    BufImport_Z = BufImport_Z2 - BufImport_Z1 + 1;
+                    BufImport_I = 0;
+                    BufImport_L = BufImport_X * BufImport_Y * BufImport_Z;
+                    BufImportPaint2();
                 }
             }
+            console.log("Malowanie Stop " + performance.now());
         }
 
-        if (XMode == 3)
-        {
-            UndoRedoClear();
-        }
-        else
-        {
-            UndoRedoUnitEnd(false);
-        }
     }
-    RetentionCamCur();
-    
-    SceneBlockListRepaint();
 
-    if (XMode == 2)
+    BufImportFinish1();
+}
+
+function BufImportFinish1()
+{
+    if (BufImport_L > 0)
+    {
+        setTimeout(BufImportFinish1, SET_BusyWait);
+        return;
+    }
+
+
+    if (BufImport_XMode == 3)
+    {
+        UndoRedoClear();
+    }
+    else
+    {
+        UndoRedoUnitEnd(false);
+    }
+
+
+    console.log("A " + performance.now());
+    
+    RetentionCamCur();
+
+    console.log("B " + performance.now());
+    
+    SceneBlockListRepaintAsync();
+    BufImportFinish2();
+}
+function BufImportFinish2()
+{
+
+    if (SceneBlockListRepaintAsyncL > 0)
+    {
+        setTimeout(BufImportFinish2, SET_BusyWait);
+        return;
+    }
+
+    console.log("C " + performance.now());
+
+    if (BufImport_XMode == 2)
     {
         CursorHide();
         Cursor.SetSize(CursorSizeX, CursorSizeY, CursorSizeZ);
@@ -496,8 +534,103 @@ function BufImport(Buf_, XMode)
         BufScreenRepaint();
         ColorSetDef();
     }
-    return ImportSuccess;
+    console.log("Stop " + performance.now());
+    BusyStop();
 }
+
+
+function BufImportPaint1()
+{
+    BusyStatus(BusyStatusPercent(BufImport_I / 2, BufImport_L));
+
+    let WorkTime = performance.now() + SET_BusyWork;
+    console.log(">>>Malujemy 1 " + BufImport_I + "/" + BufImport_L);
+    while (true)
+    {
+        console.log("Malujemy 1 " + BufImport_I + "/" + BufImport_L);
+        let BufX = BufImport_Buf[BufImport_I].split("|");
+        if (BufX.length > 6)
+        {
+            let IdxX = NumI(BufX[0]) + BufImport_X;
+            let IdxY = NumI(BufX[1]) + BufImport_Y;
+            let IdxZ = NumI(BufX[2]) + BufImport_Z;
+            if (BufImportSetColorFaces(IdxX, IdxY, IdxZ, BufX[3], BufX[4], BufX[5], BufX[6]))
+            {
+                SceneBlockListAddXYZ(IdxX, IdxY, IdxZ);
+            }
+        }
+        BufImport_I++;
+        if (BufImport_I == BufImport_L)
+        {
+            break;
+        }
+        if (performance.now() > WorkTime)
+        {
+            break;
+        }
+    }
+    if (BufImport_I < BufImport_L)
+    {
+        setTimeout(BufImportPaint1, SET_BusyTime);
+    }
+    else
+    {
+        BufImport_I = 0;
+        BufImport_L = 0;
+    }
+}
+
+function BufImportPaint2()
+{
+    BusyStatus(BusyStatusPercent(BufImport_I / 2, BufImport_L));
+
+    let WorkTime = performance.now() + SET_BusyWork;
+    console.log(">>>Malujemy 2 " + BufImport_I + "/" + BufImport_L);
+    while (true)
+    {
+        console.log("Malujemy 2 " + BufImport_I + "/" + BufImport_L);
+        let XXX = BufImport_I % BufImport_X;
+        let YYY = ((BufImport_I - XXX) / BufImport_X) % BufImport_Y;
+        let ZZZ = (BufImport_I - XXX - (YYY * BufImport_X)) / (BufImport_X * BufImport_Y);
+
+        let XXX_ = XXX * 6;
+        let YYY_ = (YYY + (ZZZ * BufImport_Y)) * 2 + 9;
+        
+        XXX = XXX + BufImport_X1;
+        YYY = YYY + BufImport_Y1;
+        ZZZ = ZZZ + BufImport_Z1;
+
+        let Buf1 = BufImport_Buf[YYY_ + 0].substr(XXX_ + 0, 3);
+        let Buf2 = BufImport_Buf[YYY_ + 0].substr(XXX_ + 3, 3);
+        let Buf3 = BufImport_Buf[YYY_ + 1].substr(XXX_ + 0, 3);
+        let Buf4 = BufImport_Buf[YYY_ + 1].substr(XXX_ + 3, 3);
+        if (BufImportSetColorFaces(XXX, YYY, ZZZ, Buf1, Buf2, Buf3, Buf4))
+        {
+            SceneBlockListAddXYZ(XXX, YYY, ZZZ);
+        }
+        BufImport_I++;
+        if (BufImport_I == BufImport_L)
+        {
+            break;
+        }
+        if (performance.now() > WorkTime)
+        {
+            break;
+        }
+    }
+    if (BufImport_I < BufImport_L)
+    {
+        setTimeout(BufImportPaint2, SET_BusyTime);
+    }
+    else
+    {
+        BufImport_I = 0;
+        BufImport_L = 0;
+    }
+}
+
+
+
 
 function BufScreenRepaintPre()
 {
@@ -743,9 +876,9 @@ function StorageInput(X)
     if (DataExists(LSPrefix + "OBJ_N_" + X) && DataExists(LSPrefix + "OBJ_V_" + X))
     {
         document.getElementById("StorageName").value = DataGet(LSPrefix + "OBJ_N_" + X);
+        RetentionStorage();
         BufImport(DataGet(LSPrefix + "OBJ_V_" + X), StorageBtnMode);
     }
-    RetentionStorage();
 }
 
 function StorageList()

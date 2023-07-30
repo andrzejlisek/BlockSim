@@ -4,6 +4,7 @@ let RetentionCounter = 0;
 let RetentionDataCount = 0;
 let RetentionDataHole = [];
 let RetentionDataMap = {};
+let RetentionDataI = 0;
 
 if (DataExists(LSPrefix + "RetentionCounter")) { RetentionCounter = DataGetI(LSPrefix + "RetentionCounter"); }
 if (DataExists(LSPrefix + "RetentionDataCount")) { RetentionDataCount = DataGetI(LSPrefix + "RetentionDataCount"); }
@@ -125,6 +126,9 @@ function RetentionCamCur()
 }
 
 
+let RetentionLoad_RetentionCounter_;
+let RetentionLoad_EditState_;
+
 function RetentionLoad()
 {
     RetentionCounter++;
@@ -134,8 +138,8 @@ function RetentionLoad()
         RetentionDataMap = {};
         RetentionDataHole = [];
     
-        let RetentionCounter_ = RetentionCounter;
-        let EditState_ = 0;
+        RetentionLoad_RetentionCounter_ = RetentionCounter;
+        RetentionLoad_EditState_ = 0;
     
         if (DataExists(LSPrefix + "RetentionHeader"))
         {
@@ -178,7 +182,12 @@ function RetentionLoad()
        
         BufScreenRepaintPre();
         SceneBlockListClear();
-        for (let I = 0; I < RetentionDataCount; I++)
+        BusyStart();
+        RetentionDataI = 0;
+        RetentionLoadWork();
+        
+        
+        /*for (let I = 0; I < RetentionDataCount; I++)
         {
             let DataItemName = LSPrefix + "RetentionData_" + I;
             if (DataExists(DataItemName))
@@ -195,26 +204,11 @@ function RetentionLoad()
             {
                 RetentionDataHole.push(I);
             }
-        }
-        SceneBlockListRepaint();
+        }*/
 
-        BufScreenRepaint();
-        ColorSetDef();
+        //SceneBlockListRepaintAsync();
+        //RetentionLoadFinish();
         
-        EditState = EditState_;
-        CursorEditStateBtn();
-
-        RetentionCounter = RetentionCounter_;
-        DataSet(LSPrefix + "RetentionCounter", RetentionCounter);
-
-        if (DataExists(LSPrefix + "RetentionText"))
-        {
-            document.getElementById("TextBuffer").value = DataGet(LSPrefix + "RetentionText");
-        }
-        if (DataExists(LSPrefix + "RetentionStorageName"))
-        {
-            document.getElementById("StorageName").value = DataGet(LSPrefix + "RetentionStorageName");
-        }
     }
     else
     {
@@ -249,10 +243,95 @@ function RetentionLoad()
         }
         document.getElementById("StorageName").value = "";        
         document.getElementById("TextBuffer").value = "";
+        StorageBtn();
+        UndoRedoFromTemp();
+        BusyStop();
     }
 
-    StorageBtn();
 }
+
+function RetentionLoadWork()
+{
+    BusyStatus(BusyStatusPercent(RetentionDataI / 2, RetentionDataCount));
+
+
+
+    let WorkTime = performance.now() + SET_BusyWork;
+    while (true)
+    {
+        let DataItemName = LSPrefix + "RetentionData_" + RetentionDataI;
+        if (DataExists(DataItemName))
+        {
+            let ObjInfo = JSON.parse(DataGet(DataItemName));
+            RetentionDataMap[Idx_(ObjInfo.PX, ObjInfo.PY, ObjInfo.PZ)] = RetentionDataI;
+            let Obj = SceneAdd(ObjInfo.PX, ObjInfo.PY, ObjInfo.PZ);
+            Obj.SetFaces(ObjInfo.F0, ObjInfo.F1, ObjInfo.F2, ObjInfo.F3, ObjInfo.F4, ObjInfo.F5);
+            Obj.SetColor(ObjInfo.C1R, ObjInfo.C1G, ObjInfo.C1B, ObjInfo.C2R, ObjInfo.C2G, ObjInfo.C2B);
+            RetentionAdd(Obj);
+            SceneBlockListAddXYZ(ObjInfo.PX, ObjInfo.PY, ObjInfo.PZ);
+        }
+        else
+        {
+            RetentionDataHole.push(RetentionDataI);
+        }
+    
+        RetentionDataI++;
+        if (RetentionDataI == RetentionDataCount)
+        {
+            break;
+        }
+        if (performance.now() > WorkTime)
+        {
+            break;
+        }
+    }
+    if (RetentionDataI < RetentionDataCount)
+    {
+        setTimeout(RetentionLoadWork, SET_BusyTime);
+    }
+    else
+    {
+        SceneBlockListRepaintAsync();
+        RetentionLoadFinish();
+    }
+}
+
+function RetentionLoadFinish()
+{
+    if (SceneBlockListRepaintAsyncL > 0)
+    {
+        setTimeout(RetentionLoadFinish, SET_BusyWait);
+        return;
+    }
+
+
+    BufScreenRepaint();
+    ColorSetDef();
+
+    EditState = RetentionLoad_EditState_;
+    CursorEditStateBtn();
+
+    RetentionCounter = RetentionLoad_RetentionCounter_;
+    DataSet(LSPrefix + "RetentionCounter", RetentionCounter);
+
+    if (DataExists(LSPrefix + "RetentionText"))
+    {
+        document.getElementById("TextBuffer").value = DataGet(LSPrefix + "RetentionText");
+    }
+    if (DataExists(LSPrefix + "RetentionStorageName"))
+    {
+        document.getElementById("StorageName").value = DataGet(LSPrefix + "RetentionStorageName");
+    }
+
+
+    StorageBtn();
+    UndoRedoFromTemp();
+    BusyStop();
+}
+
+
+
+
 
 function RetentionStorage()
 {

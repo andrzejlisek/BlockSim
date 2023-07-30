@@ -295,3 +295,39 @@ var render = function ()
     ViewRenderer.render(ViewScene, ViewCamera);
 };
 
+function Busy()
+{
+    return IsBusy;
+}
+
+function BusyStart()
+{
+    BusyStatus("");
+    IsBusy = true;
+    HtmlSetVisible("BusyScreen", true);
+}
+
+function BusyStop()
+{
+    BusyStatus("");
+    IsBusy = false;
+    HtmlSetVisible("BusyScreen", false);
+}
+
+function BusyStatus(X)
+{
+    document.getElementById("BusyStatus").innerHTML = "<span style=\"font-size:" + SET_Control1Size + "px\">" + X + "</span>";
+}
+
+function BusyStatusPercent(I, N)
+{
+    if (N > 0)
+    {
+        return Math.floor((I * 100) / N) + "%";
+    }
+    else
+    {
+        return "_%";
+    }
+}
+
